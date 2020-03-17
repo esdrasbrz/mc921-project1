@@ -1,7 +1,8 @@
 import lex.calculator_example
+import lex.lexer
 
 
-def main():
+def test_calculator_example():
     lexer = lex.calculator_example.lexer
     # Test it out
     data = '''
@@ -20,5 +21,29 @@ def main():
     pass
 
 
+def test_lexer():
+    lexer = lex.lexer.lexer  # will fix this later, my bad
+
+    data = '''
+    _int = 333
+    float1 = 444.4
+    string = "Hello World\n" 
+    // test inline comment
+    /* test block comment */
+    
+    '''
+    lexer.input(data)
+
+    while True:
+        tok = lexer.token()
+        if not tok:
+            break      # No more input
+        print(tok)
+    pass
+
+
 if __name__ == "__main__":
-    main()
+    print('\n=== test_calculator_example() ===\n')
+    test_calculator_example()
+    print('\n=== test_lexer() ===\n')
+    test_lexer()
