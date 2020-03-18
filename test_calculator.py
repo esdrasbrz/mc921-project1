@@ -1,8 +1,8 @@
 import lex.calculator_example
-import lex.lexer
+import lex.main
 
 
-def test_calculator_example():
+def main():
     lexer = lex.calculator_example.lexer
     # Test it out
     data = '''
@@ -22,7 +22,7 @@ def test_calculator_example():
 
 
 def test_lexer():
-    lexer = lex.lexer.lexer  # will fix this later, my bad
+    lexer = lex.main.lexer  # will fix this later, my bad
 
     data = '''
     _int = 333
@@ -30,6 +30,7 @@ def test_lexer():
     string = "Hello World\n" 
     // test inline comment
     /* test block comment */
+    /* "This is a string inside a block comment" */ 
     
     '''
     lexer.input(data)
@@ -43,7 +44,6 @@ def test_lexer():
 
 
 if __name__ == "__main__":
-    print('\n=== test_calculator_example() ===\n')
-    test_calculator_example()
+    main()
     print('\n=== test_lexer() ===\n')
     test_lexer()
