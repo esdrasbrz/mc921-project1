@@ -1,6 +1,22 @@
 import ply.lex as lex
 
-tokens = (
+reserved = {
+    'if' : 'IF',
+    'else' : 'ELSE',
+    'while' : 'WHILE',
+    'for' : 'FOR',
+    'void': 'VOID',
+    'char': 'CHAR',
+    'int': 'INT',
+    'float': 'FLOAT',
+    'break': 'BREAK',
+    'return': 'RETURN',
+    'assert': 'ASSERT',
+    'print': 'PRINT',
+    'read': 'READ'
+}
+
+tokens = [
     'CCOMMENT',
     'UCCCOMMENT',
     'ID',
@@ -15,7 +31,7 @@ tokens = (
     'INT_CONST',
     'FLOAT_CONST',
     'STRING_CONST',
-)
+] + list(reserved.values())
 
 t_EQUALS = r'\='
 t_PLUS = r'\+'
@@ -38,6 +54,7 @@ def t_UCCOMMENT(t):
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value,'ID')    # Check for reserved words
     return t
 
 
