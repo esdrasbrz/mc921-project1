@@ -56,6 +56,15 @@ def test_int_const(lex):
     assert str(tok) == 'LexToken(INT_CONST,3412,9,0)'
 
 
+def test_float_const(lex):
+    lex.input('222.4')
+    tok = lex.token()
+    assert str(tok) == 'LexToken(FLOAT_CONST,222.4,9,0)'
+    lex.input('.4')
+    tok = lex.token()
+    assert str(tok) == 'LexToken(FLOAT_CONST,0.4,9,0)'
+
+
 def test_string_const(lex):
     lex.input('"Hello World"')
     tok = lex.token()

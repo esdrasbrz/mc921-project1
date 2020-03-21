@@ -46,15 +46,15 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
 
-def t_INT_CONST(t):
-    r'0|[1-9][0-9]*'
-    t.value = int(t.value)
+def t_FLOAT_CONST(t):
+    r'([0-9]*?\.[0-9]+)|([0-9]+\.)'
+    t.value = float(t.value)
     return t
 
 
-def t_FLOAT_CONST(t):
-    r'([0-9]*\.[0-9]+)|([0-9]+\.)'
-    t.value = float(t.value)
+def t_INT_CONST(t):
+    r'0|[1-9][0-9]*'
+    t.value = int(t.value)
     return t
 
 
