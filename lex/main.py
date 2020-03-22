@@ -20,26 +20,86 @@ tokens = [
     'CCOMMENT',
     'UCCCOMMENT',
     'ID',
-    'EQUALS',
     'NUMBER',
     'PLUS',
+    'PLUS_PLUS',
     'MINUS',
+    'MINUS_MINUS',
     'TIMES',
     'DIVIDE',
-    'LPAREN',
-    'RPAREN',
+    'QUESTION',
+    'SEMI',
+    'COMMA',
+    'UPPERSAND',
+    'AND',
+    'OR',
+    'NOT',
+    'DIFFERENT',
+    'EQUAL',
+    'SMALLER',
+    'SMALLER_EQUAL',
+    'BIGGER',
+    'BIGGER_EQUAL',
+    'ASSIGN',
+    'ASSIGN_TIMES',
+    'ASSIGN_DIVIDE',
+    'ASSIGN_REMAINDER',
+    'ASSIGN_PLUS',
+    'ASSIGN_MINUS',
     'INT_CONST',
     'FLOAT_CONST',
     'STRING_CONST',
+    'LPAREN',
+    'RPAREN',
+    'LBRACKET',
+    'RBRACKET',
+    'LBRACES',
+    'RBRACES'
 ] + list(reserved.values())
 
-t_EQUALS = r'\='
+# Operators
 t_PLUS = r'\+'
+t_PLUS_PLUS = r'\+\+'
 t_MINUS = r'-'
+t_MINUS_MINUS = r'--'
 t_TIMES = r'\*'
 t_DIVIDE = r'/'
+
+# Helper symbols
+t_SEMI = r';'
+t_COMMA = r','
+t_QUESTION = r'\?'
+t_UPPERSAND = '&'
+
+# Logic symbols
+t_OR = r'\|\|'
+t_AND = r'&&'
+t_NOT = r'!'
+
+# Comparison symbols
+t_DIFFERENT = r'!='
+t_EQUAL= r'=='
+t_SMALLER = r'<'
+t_SMALLER_EQUAL = r'<='
+t_BIGGER = r'>'
+t_BIGGER_EQUAL = r'<='
+
+# Assign symbols
+t_ASSIGN = r'\='
+t_ASSIGN_TIMES = r'\*='
+t_ASSIGN_DIVIDE = r'/='
+t_ASSIGN_REMAINDER = r'%='
+t_ASSIGN_PLUS = r'\+='
+t_ASSIGN_MINUS = r'-='
+
+# Left Right symbols
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
+t_LBRACKET = r'\['
+t_RBRACKET  = r'\]'
+t_LBRACES = r'{'
+t_RBRACES = r'}'
+
 
 
 def t_CCOMMENT(t):
@@ -76,7 +136,7 @@ def t_INT_CONST(t):
 
 
 def t_STRING_CONST(t):
-    r'["][\w\s]+["]'
+    r'".*?"'
     t.value = str(t.value)
     return t
 
