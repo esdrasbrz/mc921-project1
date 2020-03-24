@@ -1,5 +1,7 @@
 import ply.lex as lex
 
+from lex.exceptions import IllegalCharacterError
+
 reserved = {
     'if' : 'IF',
     'else' : 'ELSE',
@@ -145,8 +147,7 @@ t_ignore = ' \t'
 
 
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
-    t.lexer.skip(1)
+    raise IllegalCharacterError("Illegal character {}".format(t.value[0]))
 
 
 lexer = lex.lex()
