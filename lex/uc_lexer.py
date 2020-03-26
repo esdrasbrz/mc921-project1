@@ -3,7 +3,7 @@ import ply.lex as lex
 from lex.exceptions import IllegalCharacterError
 
 
-class UCLexer():
+class UCLexer:
     """ A lexer for the uC language. After building it, set the
         input text with input(), and call token() to get new
         tokens.
