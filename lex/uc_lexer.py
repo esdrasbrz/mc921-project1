@@ -1,6 +1,6 @@
 import ply.lex as lex
 
-from lex.exceptions import IllegalCharacterError
+from lex.exceptions import IllegalCharacterError, UnterminatedStringError, UnterminatedCommentError
 
 
 class UCLexer:
@@ -55,6 +55,13 @@ class UCLexer:
 
     def _make_tok_location(self, token):
         return (token.lineno, self.find_tok_column(token))
+
+    def check_unbalanced(self, text, symbols):
+        while any(x in text for x in symbols):
+            for symbol in symbols:
+                text = text.replace(symbol, '')
+
+        return not text
 
     # Reserved keywords
     keywords = (
@@ -144,6 +151,13 @@ class UCLexer:
         r'/\*(.|\n)*?\*/'
         pass
 
+    def t_UNTERMINATED_CCOMMENT(self, t):
+        r'/\*.*'
+        if not self.check_unbalanced(t.value, ['/**/']):
+            msg = '{}'.format(UnterminatedCommentError("{}: Unterminated comment".format(t.lineno)))
+            self._error(msg, t)
+        pass
+
     def t_UCCOMMENT(self, t):
         r'//.*'
         pass
@@ -162,6 +176,14 @@ class UCLexer:
         r'".*?"'
         t.value = str(t.value)
         return t
+
+    def t_UNTERMINATED_STRING(self, t):
+        r'("|\').*'
+        if not self.check_unbalanced(t.value, ['""', "''"]):
+            msg = '{}'.format(UnterminatedStringError("{}: Unterminated string".format(t.lineno)))
+            self._error(msg, t)
+        pass
+
 
     def t_error(self, t):
         msg = '{}'.format(IllegalCharacterError("Illegal character {}".format(t.value[0])))

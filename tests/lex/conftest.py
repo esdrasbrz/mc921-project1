@@ -1,5 +1,4 @@
 import pytest
-from lex.main import lexer
 from lex.uc_lexer import UCLexer
 
 
@@ -7,7 +6,7 @@ from lex.uc_lexer import UCLexer
 def lex():
 
     def print_error(msg, x, y):
-        print("Lexical error: %s at %d:%d" % (msg, x, y))
+        print("\nLexical error: %s at %d:%d" % (msg, x, y))
 
     lex = UCLexer(print_error)
     lex.build()
