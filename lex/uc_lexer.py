@@ -57,18 +57,6 @@ class UCLexer:
     def _make_tok_location(self, token):
         return (token.lineno, self.find_tok_column(token))
 
-    def check_unterminated(self, text, initials, finals):
-        count = 0
-
-        for char in text:
-            if char == initials:
-                count += 1
-            elif char == finals:
-                count += 1
-
-        return True if count % 2 == 0 else False
-
-
     # Reserved keywords
     keywords = (
         'ASSERT', 'BREAK', 'CHAR', 'ELSE', 'FLOAT', 'FOR', 'IF',
@@ -158,10 +146,9 @@ class UCLexer:
         pass
 
     def t_UNTERMINATED_CCOMMENT(self, t):
-        r'/\*.*'
-        if not self.check_unterminated(t.value, '/*', '*/'):
-            msg = '{}'.format(UnterminatedCommentError("{}: Unterminated comment".format(t.lineno)))
-            self._error(msg, t)
+        r'/\*(.|\n)*'
+        msg = '{}'.format(UnterminatedCommentError("{}: Unterminated comment".format(t.lineno)))
+        self._error(msg, t)
         pass
 
     def t_UCCOMMENT(self, t):
@@ -184,14 +171,10 @@ class UCLexer:
         return t
 
     def t_UNTERMINATED_STRING(self, t):
-        r'("|\').*'
-
-        if not self.check_unterminated(t.value, '"', '"') or not self.check_unterminated(t.value, "'", "'"):
-            msg = '{}'.format(UnterminatedStringError("{}: Unterminated string".format(t.lineno)))
-            self._error(msg, t)
-
+        r'".*?'
+        msg = '{}'.format(UnterminatedStringError("{}: Unterminated string".format(t.lineno)))
+        self._error(msg, t)
         pass
-
 
     def t_error(self, t):
         msg = '{}'.format(IllegalCharacterError("Illegal character {}".format(t.value[0])))
