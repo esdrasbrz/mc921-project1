@@ -18,6 +18,9 @@ def test_unterminated_string(lex):
 
     lex.input("' incomplete double quote string")
     tok = lex.token()
+
+    lex.input("' incomplete double quote string\"")
+    tok = lex.token()
     pass
 
 

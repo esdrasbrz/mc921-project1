@@ -1,4 +1,5 @@
 import ply.lex as lex
+import re
 
 from lex.exceptions import IllegalCharacterError, UnterminatedStringError, UnterminatedCommentError
 
@@ -56,12 +57,17 @@ class UCLexer:
     def _make_tok_location(self, token):
         return (token.lineno, self.find_tok_column(token))
 
-    def check_unbalanced(self, text, symbols):
-        while any(x in text for x in symbols):
-            for symbol in symbols:
-                text = text.replace(symbol, '')
+    def check_unterminated(self, text, initials, finals):
+        count = 0
 
-        return not text
+        for char in text:
+            if char == initials:
+                count += 1
+            elif char == finals:
+                count += 1
+
+        return True if count % 2 == 0 else False
+
 
     # Reserved keywords
     keywords = (
@@ -153,7 +159,7 @@ class UCLexer:
 
     def t_UNTERMINATED_CCOMMENT(self, t):
         r'/\*.*'
-        if not self.check_unbalanced(t.value, ['/**/']):
+        if not self.check_unterminated(t.value, '/*', '*/'):
             msg = '{}'.format(UnterminatedCommentError("{}: Unterminated comment".format(t.lineno)))
             self._error(msg, t)
         pass
@@ -179,9 +185,11 @@ class UCLexer:
 
     def t_UNTERMINATED_STRING(self, t):
         r'("|\').*'
-        if not self.check_unbalanced(t.value, ['""', "''"]):
+
+        if not self.check_unterminated(t.value, '"', '"') or not self.check_unterminated(t.value, "'", "'"):
             msg = '{}'.format(UnterminatedStringError("{}: Unterminated string".format(t.lineno)))
             self._error(msg, t)
+
         pass
 
 
