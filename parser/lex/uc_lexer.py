@@ -1,7 +1,7 @@
 import ply.lex as lex
 import re
 
-from lex.exceptions import IllegalCharacterError, UnterminatedStringError, UnterminatedCommentError
+from .exceptions import IllegalCharacterError, UnterminatedStringError, UnterminatedCommentError
 
 
 class UCLexer:

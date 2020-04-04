@@ -1,5 +1,5 @@
 import pytest
-from lex.uc_lexer import UCLexer
+from parser.lex.uc_lexer import UCLexer
 
 
 @pytest.fixture

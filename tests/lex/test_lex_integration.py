@@ -1,4 +1,4 @@
-from tests.lex.data import *
+from .data import *
 
 
 def test_lex_identifiers(lex):
@@ -51,6 +51,7 @@ def test_example_6(lex):
     lex.input(lex_example_6)
     while True:
         tok = lex.token()
+        print(tok)
         if not tok:
             break  # No more input
     pass
