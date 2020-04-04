@@ -109,6 +109,57 @@ class Constant(Node):
 
     attr_names = ('type', 'value', )
 
+class Type(Node):
+    __slots__ = ('names', 'coord')
+
+    def __init__(self, names, coord=None):
+        self.names = names
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        return tuple(nodelist)
+
+    attr_names = ('names', )
+
+class Assignment(Node):
+    __slots__ = ('op', 'coord')
+
+    def __init__(self, op, coord=None):
+        self.op = op
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        return tuple(nodelist)
+
+    attr_names = ('op', )
+
+class UnaryOp(Node):
+    __slots__ = ('op', 'coord')
+
+    def __init__(self, op, coord=None):
+        self.op = op
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        return tuple(nodelist)
+
+    attr_names = ('op', )
+
+class ID(Node):
+    __slots__ = ('name', 'coord')
+    def __init__(self, name, coord=None):
+        self.name = name
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        return tuple(nodelist)
+
+    attr_names = ('name', )
+
 #  =============================================
 # Don't really know | if we should implement the following
 # class NodeVisitor(object):

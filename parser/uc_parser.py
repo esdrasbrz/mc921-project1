@@ -44,10 +44,49 @@ class UCParser:
         """
         p[0] = [p[1]] if len(p) == 2 else p[1] + [p[2]]
 
+    # This is not right, just a workaround to make the compiler work
     def p_global_declaration(self, p):
         """ global_declaration : constant
+                               | type_specifier
+                               | assignment_operator
+                               | unary_operator
+                               | identifier
         """
+
         p[0] = p[1]
+
+    def p_identifier(self, p):
+        """ identifier  : ID
+        """
+        p[0] = ID(p[1])
+
+    def p_unary_operator(self, p):
+        """ unary_operator : UPPERSAND
+                           | TIMES
+                           | PLUS
+                           | MINUS
+                           | NOT
+        """
+        p[0] = UnaryOp(p[1])
+
+
+    def p_type_specifier(self, p):
+        """ type_specifier : VOID
+                           | CHAR
+                           | INT
+                           | FLOAT
+        """
+        p[0] = Type([p[1]])
+
+    def p_assignment_operator(self, p):
+        """ assignment_operator : ASSIGN
+                                | ASSIGN_TIMES
+                                | ASSIGN_DIVIDE
+                                | ASSIGN_REMAINDER
+                                | ASSIGN_PLUS
+                                | ASSIGN_MINUS
+        """
+        p[0] = Assignment(p[1])
 
     def p_constant_1(self, p):
         """ constant : INT_CONST
