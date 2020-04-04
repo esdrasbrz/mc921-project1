@@ -13,17 +13,9 @@ def test_unterminated_comment(lex):
 
 
 def test_unterminated_string(lex):
-    lex.input('" incomplete single quote string')
-    tok = lex.token()
-
-    lex.input("' incomplete double quote string")
-    tok = lex.token()
-
-    lex.input("' incomplete double quote string\"")
+    lex.input('" incomplete string')
     tok = lex.token()
     pass
-
-
 
 def test_ucomment(lex):
     lex.input('// test inline comment')
