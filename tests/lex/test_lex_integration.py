@@ -1,17 +1,26 @@
+import pytest
+
+from tests.conftest import read_files
 from .data import *
 
 
-def test_lex_identifiers(lex):
+# @pytest.mark.parametrize('inputs, expected', list(zip(read_files('.in'), read_files('.out'))))
+def test_lex_identifiers(lex, tests):
     """
     Integration test for the lex, tests identifiers
     :return:
     """
-    lex.input(lex_identifier_test)
 
+    lex.input(tests[0])
+    output = ""
     while True:
         tok = lex.token()
         if not tok:
             break  # No more input
+        output += "{}\n".format(tok)
+    output = output.rstrip('\n')
+    assert output == tests[1]
+
     pass
 
 
@@ -32,7 +41,7 @@ def test_lex_reserved(lex):
 def test_lex_all(lex):
     """
     Integration test for the lexer, test all possible cases
-    :return:
+    :return
     """
     lex.input(lex_test_all)
 
@@ -51,7 +60,6 @@ def test_example_6(lex):
     lex.input(lex_example_6)
     while True:
         tok = lex.token()
-        print(tok)
         if not tok:
             break  # No more input
     pass
