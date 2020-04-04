@@ -21,3 +21,10 @@ class UnterminatedCommentError(Error):
     Raised when lexer finds a comment block not closed
     """
     pass
+
+
+class LexerError(Error):
+    """
+    Raised when something went wrong with the lexer, mainly for testing purposes
+    """
+    pass
