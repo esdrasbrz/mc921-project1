@@ -4,7 +4,6 @@ from tests.conftest import read_files
 from .data import *
 
 
-# @pytest.mark.parametrize('inputs, expected', list(zip(read_files('.in'), read_files('.out'))))
 def test_lex_identifiers(lex, tests):
     """
     Integration test for the lex, tests identifiers
