@@ -10,6 +10,9 @@ tests = "pytest"
 ply = "==3.11"
 pytest = "==5.4.1"
 
-
 [requires]
 python_version = "3.7"
+
+[dev-packages]
+pylint = "*"
+autopep8 = "*"
