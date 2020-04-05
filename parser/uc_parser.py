@@ -111,6 +111,15 @@ class UCParser:
                                 | binary_expression DIVIDE binary_expression
                                 | binary_expression MOD binary_expression
                                 | binary_expression PLUS binary_expression
+                                | binary_expression MINUS binary_expression
+                                | binary_expression SMALLER binary_expression
+                                | binary_expression SMALLER_EQUAL binary_expression
+                                | binary_expression BIGGER binary_expression
+                                | binary_expression BIGGER_EQUAL binary_expression
+                                | binary_expression EQUAL binary_expression
+                                | binary_expression DIFFERENT binary_expression
+                                | binary_expression AND binary_expression
+                                | binary_expression OR binary_expression
         """
 
     def p_identifier(self, p):
