@@ -1,2 +1,2 @@
 float test = (float) 42++
-x = 3 || y
+x = 3 || y && 5

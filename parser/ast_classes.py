@@ -198,12 +198,6 @@ class BinaryOp(Node):
             nodelist.append(("right", self.right))
         return tuple(nodelist)
 
-    def __iter__(self):
-        if self.left is not None:
-            yield self.left
-        if self.right is not None:
-            yield self.right
-
     attr_names = ('op', )
 
 

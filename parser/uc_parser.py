@@ -1,6 +1,6 @@
 from ply.yacc import yacc
 
-from .ast_classes import *
+from . import ast_classes
 from .lex.uc_lexer import UCLexer
 
 
@@ -22,7 +22,7 @@ class UCParser:
         if last_cr < 0:
             last_cr = -1
         column = (p.lexpos(token_idx) - (last_cr))
-        return Coord(p.lineno(token_idx), column)
+        return ast_classes.Coord(p.lineno(token_idx), column)
 
     def parse(self, text, filename='', debug=False):
         """ Parses uC code and returns an AST.
@@ -50,7 +50,7 @@ class UCParser:
         """ program  : global_declaration_list
         """
         coord = self._token_coord(p,1)
-        p[0] = Program(p[1], coord)
+        p[0] = ast_classes.Program(p[1], coord)
 
     def p_global_declaration_list(self, p):
         """ global_declaration_list : global_declaration
@@ -79,7 +79,7 @@ class UCParser:
         """ postfix_expression : postfix_expression PLUS_PLUS
                             | postfix_expression MINUS_MINUS
         """
-        p[0] = UnaryOp(p[2], p[1], p[1].coord)
+        p[0] = ast_classes.UnaryOp(p[2], p[1], p[1].coord)
 
     def p_primary_expression(self, p):
         """ primary_expression : identifier
@@ -95,7 +95,7 @@ class UCParser:
     def p_cast_expression_2(self, p):
         """ cast_expression : LPAREN type_specifier RPAREN cast_expression
         """
-        p[0] = Cast(p[2], p[4], self._token_coord(p, 1))
+        p[0] = ast_classes.Cast(p[2], p[4], self._token_coord(p, 1))
 
     def p_unary_expression_1(self, p):
         """ unary_expression : postfix_expression
@@ -107,7 +107,7 @@ class UCParser:
                                 | MINUS_MINUS unary_expression
                                 | unary_operator cast_expression
         """
-        p[0] = UnaryOp(p[1], p[2], p[2].coord)
+        p[0] = ast_classes.UnaryOp(p[1], p[2], p[2].coord)
 
     def p_binary_expression(self, p):
         """ binary_expression   : cast_expression
@@ -128,7 +128,7 @@ class UCParser:
         if len(p) == 2:
             p[0] = p[1]
         else:
-            p[0] = BinaryOp(p[2], p[1], p[3], p[1].coord)
+            p[0] = ast_classes.BinaryOp(p[2], p[1], p[3], p[1].coord)
 
     def p_constant_expression(self, p):
         """ constant_expression    : binary_expression
@@ -139,7 +139,7 @@ class UCParser:
         """ identifier  : ID
         """
         coord = self._token_coord(p,1)
-        p[0] = ID(p[1], coord)
+        p[0] = ast_classes.ID(p[1], coord)
 
     def p_unary_operator(self, p):
         """ unary_operator : UPPERSAND
@@ -157,7 +157,7 @@ class UCParser:
                            | FLOAT
         """
         coord = self._token_coord(p,1)
-        p[0] = Type([p[1]], coord)
+        p[0] = ast_classes.Type([p[1]], coord)
 
     def p_assignment_operator(self, p):
         """ assignment_operator : ASSIGN
@@ -168,25 +168,25 @@ class UCParser:
                                 | ASSIGN_MINUS
         """
         coord = self._token_coord(p,1)
-        p[0] = Assignment(p[1], coord)
+        p[0] = ast_classes.Assignment(p[1], coord)
 
     def p_constant_1(self, p):
         """ constant : INT_CONST
         """
         coord = self._token_coord(p,1)
-        p[0] = Constant('int', p[1], coord)
+        p[0] = ast_classes.Constant('int', p[1], coord)
 
     def p_constant_2(self, p):
         """ constant : FLOAT_CONST
         """
         coord = self._token_coord(p,1)
-        p[0] = Constant('float', p[1], coord)
+        p[0] = ast_classes.Constant('float', p[1], coord)
 
     def p_constant_3(self, p):
         """ constant : STRING_CONST
         """
         coord = self._token_coord(p,1)
-        p[0] = Constant('string', p[1], coord)
+        p[0] = ast_classes.Constant('string', p[1], coord)
 
     def p_error (self, p):
         if p:
