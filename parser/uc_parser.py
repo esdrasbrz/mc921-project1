@@ -97,6 +97,25 @@ class UCParser:
         """
         p[0] = ast_classes.Cast(p[2], p[4], self._token_coord(p, 1))
 
+    def p_assignment_expression(self, p):
+        """ assignment_expression   : binary_expression
+                                    | unary_expression assignment_operator assignment_expression
+        """
+        if len(p) == 2:
+            p[0] = p[1]
+        else:
+            p[0] = ast_classes.Assignment(p[2], p[1], p[3], p[1].coord)
+
+    def p_assignment_operator(self, p):
+        """ assignment_operator : ASSIGN
+                                | ASSIGN_TIMES
+                                | ASSIGN_DIVIDE
+                                | ASSIGN_MOD
+                                | ASSIGN_PLUS
+                                | ASSIGN_MINUS
+        """
+        p[0] = p[1]
+
     def p_unary_expression_1(self, p):
         """ unary_expression : postfix_expression
         """
