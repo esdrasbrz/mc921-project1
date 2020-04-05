@@ -3,8 +3,10 @@ from ply.yacc import yacc
 from .ast_classes import *
 from .lex.uc_lexer import UCLexer
 
+
 def print_error(msg, x, y):
     print("Lexical error: %s at %d:%d" % (msg, x, y))
+
 
 class UCParser:
     tokens = UCLexer.tokens
@@ -15,16 +17,12 @@ class UCParser:
         self.parser = yacc(module=self)
         pass
 
-
-
     def _token_coord(self, p, token_idx):
         last_cr = p.lexer.lexer.lexdata.rfind('\n', 0, p.lexpos(token_idx))
         if last_cr < 0:
             last_cr = -1
         column = (p.lexpos(token_idx) - (last_cr))
         return Coord(p.lineno(token_idx), column)
-
-
 
     def parse(self, text, filename='', debug=False):
         """ Parses uC code and returns an AST.
@@ -120,6 +118,14 @@ class UCParser:
                                 | binary_expression DIFFERENT binary_expression
                                 | binary_expression AND binary_expression
                                 | binary_expression OR binary_expression
+        """
+        if len(p) == 2:
+            p[0] = p[1]
+        else:
+            p[0] = BinaryOp(p[2], p[1], p[3], p[1].coord)
+
+    def p_constant_expression(self, p):
+        """ constant_expression    : binary_expression
         """
 
     def p_identifier(self, p):
