@@ -62,8 +62,7 @@ class UCParser:
     def p_global_declaration(self, p):
         """ global_declaration : postfix_expression
                                | type_specifier
-                               | assignment_operator
-                               | assigment_expression
+                               | assignment_expression
                                | cast_expression
                                | unary_expression
                                | binary_expression
@@ -151,12 +150,12 @@ class UCParser:
             p[0] = ast_classes.BinaryOp(p[2], p[1], p[3], p[1].coord)
 
     def p_constant_expression(self, p):
-        """ constant_expression    : binary_expression
+        """ constant_expression : binary_expression
         """
         p[0] = p[1]
 
     def p_identifier(self, p):
-        """ identifier  : ID
+        """ identifier : ID
         """
         coord = self._token_coord(p,1)
         p[0] = ast_classes.ID(p[1], coord)
