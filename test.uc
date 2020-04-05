@@ -1,2 +1,2 @@
-char test = int 42 + float 42.42
-string "Test" = 10
+float test = (float) 42++
+x = 3 || y && 5
