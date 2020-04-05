@@ -155,14 +155,18 @@ class Type(Node):
     attr_names = ('names', )
 
 class Assignment(Node):
-    __slots__ = ('op', 'coord')
+    __slots__ = ('op', 'lvalue', 'rvalue', 'coord')
 
-    def __init__(self, op, coord=None):
+    def __init__(self, op, lvalue, rvalue, coord=None):
         self.op = op
+        self.lvalue = lvalue
+        self.rvalue = rvalue
         self.coord = coord
 
     def children(self):
         nodelist = []
+        if self.lvalue is not None: nodelist.append(("lvalue", self.lvalue))
+        if self.rvalue is not None: nodelist.append(("rvalue", self.rvalue))
         return tuple(nodelist)
 
     attr_names = ('op', )

@@ -62,7 +62,7 @@ class UCParser:
     def p_global_declaration(self, p):
         """ global_declaration : postfix_expression
                                | type_specifier
-                               | assignment_operator
+                               | assignment_expression
                                | cast_expression
                                | unary_expression
                                | binary_expression
@@ -96,6 +96,25 @@ class UCParser:
         """ cast_expression : LPAREN type_specifier RPAREN cast_expression
         """
         p[0] = ast_classes.Cast(p[2], p[4], self._token_coord(p, 1))
+
+    def p_assignment_expression(self, p):
+        """ assignment_expression   : binary_expression
+                                    | unary_expression assignment_operator assignment_expression
+        """
+        if len(p) == 2:
+            p[0] = p[1]
+        else:
+            p[0] = ast_classes.Assignment(p[2], p[1], p[3], p[1].coord)
+
+    def p_assignment_operator(self, p):
+        """ assignment_operator : ASSIGN
+                                | ASSIGN_TIMES
+                                | ASSIGN_DIVIDE
+                                | ASSIGN_MOD
+                                | ASSIGN_PLUS
+                                | ASSIGN_MINUS
+        """
+        p[0] = p[1]
 
     def p_unary_expression_1(self, p):
         """ unary_expression : postfix_expression
@@ -131,12 +150,12 @@ class UCParser:
             p[0] = ast_classes.BinaryOp(p[2], p[1], p[3], p[1].coord)
 
     def p_constant_expression(self, p):
-        """ constant_expression    : binary_expression
+        """ constant_expression : binary_expression
         """
         p[0] = p[1]
 
     def p_identifier(self, p):
-        """ identifier  : ID
+        """ identifier : ID
         """
         coord = self._token_coord(p,1)
         p[0] = ast_classes.ID(p[1], coord)
@@ -158,17 +177,6 @@ class UCParser:
         """
         coord = self._token_coord(p,1)
         p[0] = ast_classes.Type([p[1]], coord)
-
-    def p_assignment_operator(self, p):
-        """ assignment_operator : ASSIGN
-                                | ASSIGN_TIMES
-                                | ASSIGN_DIVIDE
-                                | ASSIGN_REMAINDER
-                                | ASSIGN_PLUS
-                                | ASSIGN_MINUS
-        """
-        coord = self._token_coord(p,1)
-        p[0] = ast_classes.Assignment(p[1], coord)
 
     def p_constant_1(self, p):
         """ constant : INT_CONST

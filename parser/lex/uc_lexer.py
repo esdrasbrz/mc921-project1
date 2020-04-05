@@ -79,7 +79,7 @@ class UCLexer:
         'NOT', 'DIFFERENT', 'EQUAL',
         'SMALLER', 'SMALLER_EQUAL', 'BIGGER',
         'BIGGER_EQUAL', 'ASSIGN', 'ASSIGN_TIMES',
-        'ASSIGN_DIVIDE', 'ASSIGN_REMAINDER', 'ASSIGN_PLUS',
+        'ASSIGN_DIVIDE', 'ASSIGN_MOD', 'ASSIGN_PLUS',
         'ASSIGN_MINUS', 'INT_CONST', 'FLOAT_CONST',
         'STRING_CONST', 'LPAREN', 'RPAREN',
         'LBRACKET', 'RBRACKET', 'LBRACES',
@@ -120,7 +120,7 @@ class UCLexer:
     t_ASSIGN = r'\='
     t_ASSIGN_TIMES = r'\*='
     t_ASSIGN_DIVIDE = r'/='
-    t_ASSIGN_REMAINDER = r'%='
+    t_ASSIGN_MOD = r'%='
     t_ASSIGN_PLUS = r'\+='
     t_ASSIGN_MINUS = r'-='
 
