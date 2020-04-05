@@ -178,17 +178,6 @@ class UCParser:
         coord = self._token_coord(p,1)
         p[0] = ast_classes.Type([p[1]], coord)
 
-    def p_assignment_operator(self, p):
-        """ assignment_operator : ASSIGN
-                                | ASSIGN_TIMES
-                                | ASSIGN_DIVIDE
-                                | ASSIGN_REMAINDER
-                                | ASSIGN_PLUS
-                                | ASSIGN_MINUS
-        """
-        coord = self._token_coord(p,1)
-        p[0] = ast_classes.Assignment(p[1], coord)
-
     def p_constant_1(self, p):
         """ constant : INT_CONST
         """
