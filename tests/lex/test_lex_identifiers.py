@@ -24,7 +24,6 @@ def test_unterminated_string(lex):
     pass
 
 
-
 def test_ucomment(lex):
     lex.input('// test inline comment')
 
