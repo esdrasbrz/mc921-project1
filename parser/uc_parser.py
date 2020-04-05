@@ -127,6 +127,7 @@ class UCParser:
     def p_constant_expression(self, p):
         """ constant_expression    : binary_expression
         """
+        p[0] = p[1]
 
     def p_identifier(self, p):
         """ identifier  : ID
