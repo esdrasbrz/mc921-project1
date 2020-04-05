@@ -105,6 +105,14 @@ class UCParser:
         """
         p[0] = UnaryOp(p[1], p[2], p[2].coord)
 
+    def p_binary_expression(self, p):
+        """ binary_expression   : cast_expression
+                                | binary_expression TIMES binary_expression
+                                | binary_expression DIVIDE binary_expression
+                                | binary_expression MOD binary_expression
+                                | binary_expression PLUS binary_expression
+        """
+
     def p_identifier(self, p):
         """ identifier  : ID
         """

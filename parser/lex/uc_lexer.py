@@ -82,7 +82,8 @@ class UCLexer:
         'ASSIGN_DIVIDE', 'ASSIGN_REMAINDER', 'ASSIGN_PLUS',
         'ASSIGN_MINUS', 'INT_CONST', 'FLOAT_CONST',
         'STRING_CONST', 'LPAREN', 'RPAREN',
-        'LBRACKET', 'RBRACKET', 'LBRACES', 'RBRACES'
+        'LBRACKET', 'RBRACKET', 'LBRACES',
+        'RBRACES', 'MOD'
     )
 
     #
@@ -94,6 +95,7 @@ class UCLexer:
     t_MINUS_MINUS = r'--'
     t_TIMES = r'\*'
     t_DIVIDE = r'/'
+    t_MOD = r'%'
 
     # Helper symbols
     t_SEMI = r';'
