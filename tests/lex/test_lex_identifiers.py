@@ -1,3 +1,6 @@
+import pytest
+
+
 def test_ccomment(lex):
     lex.input('/* test block comment */')
 
@@ -6,21 +9,16 @@ def test_ccomment(lex):
 
 
 def test_unterminated_comment(lex):
-    lex.input('/* incomplete block comment')
-
-    tok = lex.token()
+    with pytest.raises(Exception):
+        lex.input('/* incomplete block comment')
+        tok = lex.token()
     pass
 
 
 def test_unterminated_string(lex):
-    lex.input('" incomplete single quote string')
-    tok = lex.token()
-
-    lex.input("' incomplete double quote string")
-    tok = lex.token()
-
-    lex.input("' incomplete double quote string\"")
-    tok = lex.token()
+    with pytest.raises(Exception):
+        lex.input('" incomplete string')
+        tok = lex.token()
     pass
 
 

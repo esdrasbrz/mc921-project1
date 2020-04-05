@@ -1,0 +1,934 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AND
+    ASSERT
+    BIGGER
+    BIGGER_EQUAL
+    BREAK
+    CCOMMENT
+    COMMA
+    DIFFERENT
+    DIVIDE
+    ELSE
+    EQUAL
+    FOR
+    IF
+    LBRACES
+    LBRACKET
+    LPAREN
+    MINUS_MINUS
+    NUMBER
+    OR
+    PLUS_PLUS
+    PRINT
+    QUESTION
+    RBRACES
+    RBRACKET
+    READ
+    RETURN
+    RPAREN
+    SEMI
+    SMALLER
+    SMALLER_EQUAL
+    UCCCOMMENT
+    WHILE
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> global_declaration_list
+Rule 2     global_declaration_list -> global_declaration
+Rule 3     global_declaration_list -> global_declaration_list global_declaration
+Rule 4     global_declaration -> constant
+Rule 5     global_declaration -> type_specifier
+Rule 6     global_declaration -> assignment_operator
+Rule 7     global_declaration -> unary_operator
+Rule 8     global_declaration -> identifier
+Rule 9     identifier -> ID
+Rule 10    unary_operator -> UPPERSAND
+Rule 11    unary_operator -> TIMES
+Rule 12    unary_operator -> PLUS
+Rule 13    unary_operator -> MINUS
+Rule 14    unary_operator -> NOT
+Rule 15    type_specifier -> VOID
+Rule 16    type_specifier -> CHAR
+Rule 17    type_specifier -> INT
+Rule 18    type_specifier -> FLOAT
+Rule 19    assignment_operator -> ASSIGN
+Rule 20    assignment_operator -> ASSIGN_TIMES
+Rule 21    assignment_operator -> ASSIGN_DIVIDE
+Rule 22    assignment_operator -> ASSIGN_REMAINDER
+Rule 23    assignment_operator -> ASSIGN_PLUS
+Rule 24    assignment_operator -> ASSIGN_MINUS
+Rule 25    constant -> INT_CONST
+Rule 26    constant -> FLOAT_CONST
+Rule 27    constant -> STRING_CONST
+
+Terminals, with rules where they appear
+
+AND                  : 
+ASSERT               : 
+ASSIGN               : 19
+ASSIGN_DIVIDE        : 21
+ASSIGN_MINUS         : 24
+ASSIGN_PLUS          : 23
+ASSIGN_REMAINDER     : 22
+ASSIGN_TIMES         : 20
+BIGGER               : 
+BIGGER_EQUAL         : 
+BREAK                : 
+CCOMMENT             : 
+CHAR                 : 16
+COMMA                : 
+DIFFERENT            : 
+DIVIDE               : 
+ELSE                 : 
+EQUAL                : 
+FLOAT                : 18
+FLOAT_CONST          : 26
+FOR                  : 
+ID                   : 9
+IF                   : 
+INT                  : 17
+INT_CONST            : 25
+LBRACES              : 
+LBRACKET             : 
+LPAREN               : 
+MINUS                : 13
+MINUS_MINUS          : 
+NOT                  : 14
+NUMBER               : 
+OR                   : 
+PLUS                 : 12
+PLUS_PLUS            : 
+PRINT                : 
+QUESTION             : 
+RBRACES              : 
+RBRACKET             : 
+READ                 : 
+RETURN               : 
+RPAREN               : 
+SEMI                 : 
+SMALLER              : 
+SMALLER_EQUAL        : 
+STRING_CONST         : 27
+TIMES                : 11
+UCCCOMMENT           : 
+UPPERSAND            : 10
+VOID                 : 15
+WHILE                : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+assignment_operator  : 6
+constant             : 4
+global_declaration   : 2 3
+global_declaration_list : 1 3
+identifier           : 8
+program              : 0
+type_specifier       : 5
+unary_operator       : 7
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . global_declaration_list
+    (2) global_declaration_list -> . global_declaration
+    (3) global_declaration_list -> . global_declaration_list global_declaration
+    (4) global_declaration -> . constant
+    (5) global_declaration -> . type_specifier
+    (6) global_declaration -> . assignment_operator
+    (7) global_declaration -> . unary_operator
+    (8) global_declaration -> . identifier
+    (25) constant -> . INT_CONST
+    (26) constant -> . FLOAT_CONST
+    (27) constant -> . STRING_CONST
+    (15) type_specifier -> . VOID
+    (16) type_specifier -> . CHAR
+    (17) type_specifier -> . INT
+    (18) type_specifier -> . FLOAT
+    (19) assignment_operator -> . ASSIGN
+    (20) assignment_operator -> . ASSIGN_TIMES
+    (21) assignment_operator -> . ASSIGN_DIVIDE
+    (22) assignment_operator -> . ASSIGN_REMAINDER
+    (23) assignment_operator -> . ASSIGN_PLUS
+    (24) assignment_operator -> . ASSIGN_MINUS
+    (10) unary_operator -> . UPPERSAND
+    (11) unary_operator -> . TIMES
+    (12) unary_operator -> . PLUS
+    (13) unary_operator -> . MINUS
+    (14) unary_operator -> . NOT
+    (9) identifier -> . ID
+
+    INT_CONST       shift and go to state 9
+    FLOAT_CONST     shift and go to state 10
+    STRING_CONST    shift and go to state 11
+    VOID            shift and go to state 12
+    CHAR            shift and go to state 13
+    INT             shift and go to state 14
+    FLOAT           shift and go to state 15
+    ASSIGN          shift and go to state 16
+    ASSIGN_TIMES    shift and go to state 17
+    ASSIGN_DIVIDE   shift and go to state 18
+    ASSIGN_REMAINDER shift and go to state 19
+    ASSIGN_PLUS     shift and go to state 20
+    ASSIGN_MINUS    shift and go to state 21
+    UPPERSAND       shift and go to state 22
+    TIMES           shift and go to state 23
+    PLUS            shift and go to state 24
+    MINUS           shift and go to state 25
+    NOT             shift and go to state 26
+    ID              shift and go to state 27
+
+    program                        shift and go to state 1
+    global_declaration_list        shift and go to state 2
+    global_declaration             shift and go to state 3
+    constant                       shift and go to state 4
+    type_specifier                 shift and go to state 5
+    assignment_operator            shift and go to state 6
+    unary_operator                 shift and go to state 7
+    identifier                     shift and go to state 8
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> global_declaration_list .
+    (3) global_declaration_list -> global_declaration_list . global_declaration
+    (4) global_declaration -> . constant
+    (5) global_declaration -> . type_specifier
+    (6) global_declaration -> . assignment_operator
+    (7) global_declaration -> . unary_operator
+    (8) global_declaration -> . identifier
+    (25) constant -> . INT_CONST
+    (26) constant -> . FLOAT_CONST
+    (27) constant -> . STRING_CONST
+    (15) type_specifier -> . VOID
+    (16) type_specifier -> . CHAR
+    (17) type_specifier -> . INT
+    (18) type_specifier -> . FLOAT
+    (19) assignment_operator -> . ASSIGN
+    (20) assignment_operator -> . ASSIGN_TIMES
+    (21) assignment_operator -> . ASSIGN_DIVIDE
+    (22) assignment_operator -> . ASSIGN_REMAINDER
+    (23) assignment_operator -> . ASSIGN_PLUS
+    (24) assignment_operator -> . ASSIGN_MINUS
+    (10) unary_operator -> . UPPERSAND
+    (11) unary_operator -> . TIMES
+    (12) unary_operator -> . PLUS
+    (13) unary_operator -> . MINUS
+    (14) unary_operator -> . NOT
+    (9) identifier -> . ID
+
+    $end            reduce using rule 1 (program -> global_declaration_list .)
+    INT_CONST       shift and go to state 9
+    FLOAT_CONST     shift and go to state 10
+    STRING_CONST    shift and go to state 11
+    VOID            shift and go to state 12
+    CHAR            shift and go to state 13
+    INT             shift and go to state 14
+    FLOAT           shift and go to state 15
+    ASSIGN          shift and go to state 16
+    ASSIGN_TIMES    shift and go to state 17
+    ASSIGN_DIVIDE   shift and go to state 18
+    ASSIGN_REMAINDER shift and go to state 19
+    ASSIGN_PLUS     shift and go to state 20
+    ASSIGN_MINUS    shift and go to state 21
+    UPPERSAND       shift and go to state 22
+    TIMES           shift and go to state 23
+    PLUS            shift and go to state 24
+    MINUS           shift and go to state 25
+    NOT             shift and go to state 26
+    ID              shift and go to state 27
+
+    global_declaration             shift and go to state 28
+    constant                       shift and go to state 4
+    type_specifier                 shift and go to state 5
+    assignment_operator            shift and go to state 6
+    unary_operator                 shift and go to state 7
+    identifier                     shift and go to state 8
+
+state 3
+
+    (2) global_declaration_list -> global_declaration .
+
+    INT_CONST       reduce using rule 2 (global_declaration_list -> global_declaration .)
+    FLOAT_CONST     reduce using rule 2 (global_declaration_list -> global_declaration .)
+    STRING_CONST    reduce using rule 2 (global_declaration_list -> global_declaration .)
+    VOID            reduce using rule 2 (global_declaration_list -> global_declaration .)
+    CHAR            reduce using rule 2 (global_declaration_list -> global_declaration .)
+    INT             reduce using rule 2 (global_declaration_list -> global_declaration .)
+    FLOAT           reduce using rule 2 (global_declaration_list -> global_declaration .)
+    ASSIGN          reduce using rule 2 (global_declaration_list -> global_declaration .)
+    ASSIGN_TIMES    reduce using rule 2 (global_declaration_list -> global_declaration .)
+    ASSIGN_DIVIDE   reduce using rule 2 (global_declaration_list -> global_declaration .)
+    ASSIGN_REMAINDER reduce using rule 2 (global_declaration_list -> global_declaration .)
+    ASSIGN_PLUS     reduce using rule 2 (global_declaration_list -> global_declaration .)
+    ASSIGN_MINUS    reduce using rule 2 (global_declaration_list -> global_declaration .)
+    UPPERSAND       reduce using rule 2 (global_declaration_list -> global_declaration .)
+    TIMES           reduce using rule 2 (global_declaration_list -> global_declaration .)
+    PLUS            reduce using rule 2 (global_declaration_list -> global_declaration .)
+    MINUS           reduce using rule 2 (global_declaration_list -> global_declaration .)
+    NOT             reduce using rule 2 (global_declaration_list -> global_declaration .)
+    ID              reduce using rule 2 (global_declaration_list -> global_declaration .)
+    $end            reduce using rule 2 (global_declaration_list -> global_declaration .)
+
+
+state 4
+
+    (4) global_declaration -> constant .
+
+    INT_CONST       reduce using rule 4 (global_declaration -> constant .)
+    FLOAT_CONST     reduce using rule 4 (global_declaration -> constant .)
+    STRING_CONST    reduce using rule 4 (global_declaration -> constant .)
+    VOID            reduce using rule 4 (global_declaration -> constant .)
+    CHAR            reduce using rule 4 (global_declaration -> constant .)
+    INT             reduce using rule 4 (global_declaration -> constant .)
+    FLOAT           reduce using rule 4 (global_declaration -> constant .)
+    ASSIGN          reduce using rule 4 (global_declaration -> constant .)
+    ASSIGN_TIMES    reduce using rule 4 (global_declaration -> constant .)
+    ASSIGN_DIVIDE   reduce using rule 4 (global_declaration -> constant .)
+    ASSIGN_REMAINDER reduce using rule 4 (global_declaration -> constant .)
+    ASSIGN_PLUS     reduce using rule 4 (global_declaration -> constant .)
+    ASSIGN_MINUS    reduce using rule 4 (global_declaration -> constant .)
+    UPPERSAND       reduce using rule 4 (global_declaration -> constant .)
+    TIMES           reduce using rule 4 (global_declaration -> constant .)
+    PLUS            reduce using rule 4 (global_declaration -> constant .)
+    MINUS           reduce using rule 4 (global_declaration -> constant .)
+    NOT             reduce using rule 4 (global_declaration -> constant .)
+    ID              reduce using rule 4 (global_declaration -> constant .)
+    $end            reduce using rule 4 (global_declaration -> constant .)
+
+
+state 5
+
+    (5) global_declaration -> type_specifier .
+
+    INT_CONST       reduce using rule 5 (global_declaration -> type_specifier .)
+    FLOAT_CONST     reduce using rule 5 (global_declaration -> type_specifier .)
+    STRING_CONST    reduce using rule 5 (global_declaration -> type_specifier .)
+    VOID            reduce using rule 5 (global_declaration -> type_specifier .)
+    CHAR            reduce using rule 5 (global_declaration -> type_specifier .)
+    INT             reduce using rule 5 (global_declaration -> type_specifier .)
+    FLOAT           reduce using rule 5 (global_declaration -> type_specifier .)
+    ASSIGN          reduce using rule 5 (global_declaration -> type_specifier .)
+    ASSIGN_TIMES    reduce using rule 5 (global_declaration -> type_specifier .)
+    ASSIGN_DIVIDE   reduce using rule 5 (global_declaration -> type_specifier .)
+    ASSIGN_REMAINDER reduce using rule 5 (global_declaration -> type_specifier .)
+    ASSIGN_PLUS     reduce using rule 5 (global_declaration -> type_specifier .)
+    ASSIGN_MINUS    reduce using rule 5 (global_declaration -> type_specifier .)
+    UPPERSAND       reduce using rule 5 (global_declaration -> type_specifier .)
+    TIMES           reduce using rule 5 (global_declaration -> type_specifier .)
+    PLUS            reduce using rule 5 (global_declaration -> type_specifier .)
+    MINUS           reduce using rule 5 (global_declaration -> type_specifier .)
+    NOT             reduce using rule 5 (global_declaration -> type_specifier .)
+    ID              reduce using rule 5 (global_declaration -> type_specifier .)
+    $end            reduce using rule 5 (global_declaration -> type_specifier .)
+
+
+state 6
+
+    (6) global_declaration -> assignment_operator .
+
+    INT_CONST       reduce using rule 6 (global_declaration -> assignment_operator .)
+    FLOAT_CONST     reduce using rule 6 (global_declaration -> assignment_operator .)
+    STRING_CONST    reduce using rule 6 (global_declaration -> assignment_operator .)
+    VOID            reduce using rule 6 (global_declaration -> assignment_operator .)
+    CHAR            reduce using rule 6 (global_declaration -> assignment_operator .)
+    INT             reduce using rule 6 (global_declaration -> assignment_operator .)
+    FLOAT           reduce using rule 6 (global_declaration -> assignment_operator .)
+    ASSIGN          reduce using rule 6 (global_declaration -> assignment_operator .)
+    ASSIGN_TIMES    reduce using rule 6 (global_declaration -> assignment_operator .)
+    ASSIGN_DIVIDE   reduce using rule 6 (global_declaration -> assignment_operator .)
+    ASSIGN_REMAINDER reduce using rule 6 (global_declaration -> assignment_operator .)
+    ASSIGN_PLUS     reduce using rule 6 (global_declaration -> assignment_operator .)
+    ASSIGN_MINUS    reduce using rule 6 (global_declaration -> assignment_operator .)
+    UPPERSAND       reduce using rule 6 (global_declaration -> assignment_operator .)
+    TIMES           reduce using rule 6 (global_declaration -> assignment_operator .)
+    PLUS            reduce using rule 6 (global_declaration -> assignment_operator .)
+    MINUS           reduce using rule 6 (global_declaration -> assignment_operator .)
+    NOT             reduce using rule 6 (global_declaration -> assignment_operator .)
+    ID              reduce using rule 6 (global_declaration -> assignment_operator .)
+    $end            reduce using rule 6 (global_declaration -> assignment_operator .)
+
+
+state 7
+
+    (7) global_declaration -> unary_operator .
+
+    INT_CONST       reduce using rule 7 (global_declaration -> unary_operator .)
+    FLOAT_CONST     reduce using rule 7 (global_declaration -> unary_operator .)
+    STRING_CONST    reduce using rule 7 (global_declaration -> unary_operator .)
+    VOID            reduce using rule 7 (global_declaration -> unary_operator .)
+    CHAR            reduce using rule 7 (global_declaration -> unary_operator .)
+    INT             reduce using rule 7 (global_declaration -> unary_operator .)
+    FLOAT           reduce using rule 7 (global_declaration -> unary_operator .)
+    ASSIGN          reduce using rule 7 (global_declaration -> unary_operator .)
+    ASSIGN_TIMES    reduce using rule 7 (global_declaration -> unary_operator .)
+    ASSIGN_DIVIDE   reduce using rule 7 (global_declaration -> unary_operator .)
+    ASSIGN_REMAINDER reduce using rule 7 (global_declaration -> unary_operator .)
+    ASSIGN_PLUS     reduce using rule 7 (global_declaration -> unary_operator .)
+    ASSIGN_MINUS    reduce using rule 7 (global_declaration -> unary_operator .)
+    UPPERSAND       reduce using rule 7 (global_declaration -> unary_operator .)
+    TIMES           reduce using rule 7 (global_declaration -> unary_operator .)
+    PLUS            reduce using rule 7 (global_declaration -> unary_operator .)
+    MINUS           reduce using rule 7 (global_declaration -> unary_operator .)
+    NOT             reduce using rule 7 (global_declaration -> unary_operator .)
+    ID              reduce using rule 7 (global_declaration -> unary_operator .)
+    $end            reduce using rule 7 (global_declaration -> unary_operator .)
+
+
+state 8
+
+    (8) global_declaration -> identifier .
+
+    INT_CONST       reduce using rule 8 (global_declaration -> identifier .)
+    FLOAT_CONST     reduce using rule 8 (global_declaration -> identifier .)
+    STRING_CONST    reduce using rule 8 (global_declaration -> identifier .)
+    VOID            reduce using rule 8 (global_declaration -> identifier .)
+    CHAR            reduce using rule 8 (global_declaration -> identifier .)
+    INT             reduce using rule 8 (global_declaration -> identifier .)
+    FLOAT           reduce using rule 8 (global_declaration -> identifier .)
+    ASSIGN          reduce using rule 8 (global_declaration -> identifier .)
+    ASSIGN_TIMES    reduce using rule 8 (global_declaration -> identifier .)
+    ASSIGN_DIVIDE   reduce using rule 8 (global_declaration -> identifier .)
+    ASSIGN_REMAINDER reduce using rule 8 (global_declaration -> identifier .)
+    ASSIGN_PLUS     reduce using rule 8 (global_declaration -> identifier .)
+    ASSIGN_MINUS    reduce using rule 8 (global_declaration -> identifier .)
+    UPPERSAND       reduce using rule 8 (global_declaration -> identifier .)
+    TIMES           reduce using rule 8 (global_declaration -> identifier .)
+    PLUS            reduce using rule 8 (global_declaration -> identifier .)
+    MINUS           reduce using rule 8 (global_declaration -> identifier .)
+    NOT             reduce using rule 8 (global_declaration -> identifier .)
+    ID              reduce using rule 8 (global_declaration -> identifier .)
+    $end            reduce using rule 8 (global_declaration -> identifier .)
+
+
+state 9
+
+    (25) constant -> INT_CONST .
+
+    INT_CONST       reduce using rule 25 (constant -> INT_CONST .)
+    FLOAT_CONST     reduce using rule 25 (constant -> INT_CONST .)
+    STRING_CONST    reduce using rule 25 (constant -> INT_CONST .)
+    VOID            reduce using rule 25 (constant -> INT_CONST .)
+    CHAR            reduce using rule 25 (constant -> INT_CONST .)
+    INT             reduce using rule 25 (constant -> INT_CONST .)
+    FLOAT           reduce using rule 25 (constant -> INT_CONST .)
+    ASSIGN          reduce using rule 25 (constant -> INT_CONST .)
+    ASSIGN_TIMES    reduce using rule 25 (constant -> INT_CONST .)
+    ASSIGN_DIVIDE   reduce using rule 25 (constant -> INT_CONST .)
+    ASSIGN_REMAINDER reduce using rule 25 (constant -> INT_CONST .)
+    ASSIGN_PLUS     reduce using rule 25 (constant -> INT_CONST .)
+    ASSIGN_MINUS    reduce using rule 25 (constant -> INT_CONST .)
+    UPPERSAND       reduce using rule 25 (constant -> INT_CONST .)
+    TIMES           reduce using rule 25 (constant -> INT_CONST .)
+    PLUS            reduce using rule 25 (constant -> INT_CONST .)
+    MINUS           reduce using rule 25 (constant -> INT_CONST .)
+    NOT             reduce using rule 25 (constant -> INT_CONST .)
+    ID              reduce using rule 25 (constant -> INT_CONST .)
+    $end            reduce using rule 25 (constant -> INT_CONST .)
+
+
+state 10
+
+    (26) constant -> FLOAT_CONST .
+
+    INT_CONST       reduce using rule 26 (constant -> FLOAT_CONST .)
+    FLOAT_CONST     reduce using rule 26 (constant -> FLOAT_CONST .)
+    STRING_CONST    reduce using rule 26 (constant -> FLOAT_CONST .)
+    VOID            reduce using rule 26 (constant -> FLOAT_CONST .)
+    CHAR            reduce using rule 26 (constant -> FLOAT_CONST .)
+    INT             reduce using rule 26 (constant -> FLOAT_CONST .)
+    FLOAT           reduce using rule 26 (constant -> FLOAT_CONST .)
+    ASSIGN          reduce using rule 26 (constant -> FLOAT_CONST .)
+    ASSIGN_TIMES    reduce using rule 26 (constant -> FLOAT_CONST .)
+    ASSIGN_DIVIDE   reduce using rule 26 (constant -> FLOAT_CONST .)
+    ASSIGN_REMAINDER reduce using rule 26 (constant -> FLOAT_CONST .)
+    ASSIGN_PLUS     reduce using rule 26 (constant -> FLOAT_CONST .)
+    ASSIGN_MINUS    reduce using rule 26 (constant -> FLOAT_CONST .)
+    UPPERSAND       reduce using rule 26 (constant -> FLOAT_CONST .)
+    TIMES           reduce using rule 26 (constant -> FLOAT_CONST .)
+    PLUS            reduce using rule 26 (constant -> FLOAT_CONST .)
+    MINUS           reduce using rule 26 (constant -> FLOAT_CONST .)
+    NOT             reduce using rule 26 (constant -> FLOAT_CONST .)
+    ID              reduce using rule 26 (constant -> FLOAT_CONST .)
+    $end            reduce using rule 26 (constant -> FLOAT_CONST .)
+
+
+state 11
+
+    (27) constant -> STRING_CONST .
+
+    INT_CONST       reduce using rule 27 (constant -> STRING_CONST .)
+    FLOAT_CONST     reduce using rule 27 (constant -> STRING_CONST .)
+    STRING_CONST    reduce using rule 27 (constant -> STRING_CONST .)
+    VOID            reduce using rule 27 (constant -> STRING_CONST .)
+    CHAR            reduce using rule 27 (constant -> STRING_CONST .)
+    INT             reduce using rule 27 (constant -> STRING_CONST .)
+    FLOAT           reduce using rule 27 (constant -> STRING_CONST .)
+    ASSIGN          reduce using rule 27 (constant -> STRING_CONST .)
+    ASSIGN_TIMES    reduce using rule 27 (constant -> STRING_CONST .)
+    ASSIGN_DIVIDE   reduce using rule 27 (constant -> STRING_CONST .)
+    ASSIGN_REMAINDER reduce using rule 27 (constant -> STRING_CONST .)
+    ASSIGN_PLUS     reduce using rule 27 (constant -> STRING_CONST .)
+    ASSIGN_MINUS    reduce using rule 27 (constant -> STRING_CONST .)
+    UPPERSAND       reduce using rule 27 (constant -> STRING_CONST .)
+    TIMES           reduce using rule 27 (constant -> STRING_CONST .)
+    PLUS            reduce using rule 27 (constant -> STRING_CONST .)
+    MINUS           reduce using rule 27 (constant -> STRING_CONST .)
+    NOT             reduce using rule 27 (constant -> STRING_CONST .)
+    ID              reduce using rule 27 (constant -> STRING_CONST .)
+    $end            reduce using rule 27 (constant -> STRING_CONST .)
+
+
+state 12
+
+    (15) type_specifier -> VOID .
+
+    INT_CONST       reduce using rule 15 (type_specifier -> VOID .)
+    FLOAT_CONST     reduce using rule 15 (type_specifier -> VOID .)
+    STRING_CONST    reduce using rule 15 (type_specifier -> VOID .)
+    VOID            reduce using rule 15 (type_specifier -> VOID .)
+    CHAR            reduce using rule 15 (type_specifier -> VOID .)
+    INT             reduce using rule 15 (type_specifier -> VOID .)
+    FLOAT           reduce using rule 15 (type_specifier -> VOID .)
+    ASSIGN          reduce using rule 15 (type_specifier -> VOID .)
+    ASSIGN_TIMES    reduce using rule 15 (type_specifier -> VOID .)
+    ASSIGN_DIVIDE   reduce using rule 15 (type_specifier -> VOID .)
+    ASSIGN_REMAINDER reduce using rule 15 (type_specifier -> VOID .)
+    ASSIGN_PLUS     reduce using rule 15 (type_specifier -> VOID .)
+    ASSIGN_MINUS    reduce using rule 15 (type_specifier -> VOID .)
+    UPPERSAND       reduce using rule 15 (type_specifier -> VOID .)
+    TIMES           reduce using rule 15 (type_specifier -> VOID .)
+    PLUS            reduce using rule 15 (type_specifier -> VOID .)
+    MINUS           reduce using rule 15 (type_specifier -> VOID .)
+    NOT             reduce using rule 15 (type_specifier -> VOID .)
+    ID              reduce using rule 15 (type_specifier -> VOID .)
+    $end            reduce using rule 15 (type_specifier -> VOID .)
+
+
+state 13
+
+    (16) type_specifier -> CHAR .
+
+    INT_CONST       reduce using rule 16 (type_specifier -> CHAR .)
+    FLOAT_CONST     reduce using rule 16 (type_specifier -> CHAR .)
+    STRING_CONST    reduce using rule 16 (type_specifier -> CHAR .)
+    VOID            reduce using rule 16 (type_specifier -> CHAR .)
+    CHAR            reduce using rule 16 (type_specifier -> CHAR .)
+    INT             reduce using rule 16 (type_specifier -> CHAR .)
+    FLOAT           reduce using rule 16 (type_specifier -> CHAR .)
+    ASSIGN          reduce using rule 16 (type_specifier -> CHAR .)
+    ASSIGN_TIMES    reduce using rule 16 (type_specifier -> CHAR .)
+    ASSIGN_DIVIDE   reduce using rule 16 (type_specifier -> CHAR .)
+    ASSIGN_REMAINDER reduce using rule 16 (type_specifier -> CHAR .)
+    ASSIGN_PLUS     reduce using rule 16 (type_specifier -> CHAR .)
+    ASSIGN_MINUS    reduce using rule 16 (type_specifier -> CHAR .)
+    UPPERSAND       reduce using rule 16 (type_specifier -> CHAR .)
+    TIMES           reduce using rule 16 (type_specifier -> CHAR .)
+    PLUS            reduce using rule 16 (type_specifier -> CHAR .)
+    MINUS           reduce using rule 16 (type_specifier -> CHAR .)
+    NOT             reduce using rule 16 (type_specifier -> CHAR .)
+    ID              reduce using rule 16 (type_specifier -> CHAR .)
+    $end            reduce using rule 16 (type_specifier -> CHAR .)
+
+
+state 14
+
+    (17) type_specifier -> INT .
+
+    INT_CONST       reduce using rule 17 (type_specifier -> INT .)
+    FLOAT_CONST     reduce using rule 17 (type_specifier -> INT .)
+    STRING_CONST    reduce using rule 17 (type_specifier -> INT .)
+    VOID            reduce using rule 17 (type_specifier -> INT .)
+    CHAR            reduce using rule 17 (type_specifier -> INT .)
+    INT             reduce using rule 17 (type_specifier -> INT .)
+    FLOAT           reduce using rule 17 (type_specifier -> INT .)
+    ASSIGN          reduce using rule 17 (type_specifier -> INT .)
+    ASSIGN_TIMES    reduce using rule 17 (type_specifier -> INT .)
+    ASSIGN_DIVIDE   reduce using rule 17 (type_specifier -> INT .)
+    ASSIGN_REMAINDER reduce using rule 17 (type_specifier -> INT .)
+    ASSIGN_PLUS     reduce using rule 17 (type_specifier -> INT .)
+    ASSIGN_MINUS    reduce using rule 17 (type_specifier -> INT .)
+    UPPERSAND       reduce using rule 17 (type_specifier -> INT .)
+    TIMES           reduce using rule 17 (type_specifier -> INT .)
+    PLUS            reduce using rule 17 (type_specifier -> INT .)
+    MINUS           reduce using rule 17 (type_specifier -> INT .)
+    NOT             reduce using rule 17 (type_specifier -> INT .)
+    ID              reduce using rule 17 (type_specifier -> INT .)
+    $end            reduce using rule 17 (type_specifier -> INT .)
+
+
+state 15
+
+    (18) type_specifier -> FLOAT .
+
+    INT_CONST       reduce using rule 18 (type_specifier -> FLOAT .)
+    FLOAT_CONST     reduce using rule 18 (type_specifier -> FLOAT .)
+    STRING_CONST    reduce using rule 18 (type_specifier -> FLOAT .)
+    VOID            reduce using rule 18 (type_specifier -> FLOAT .)
+    CHAR            reduce using rule 18 (type_specifier -> FLOAT .)
+    INT             reduce using rule 18 (type_specifier -> FLOAT .)
+    FLOAT           reduce using rule 18 (type_specifier -> FLOAT .)
+    ASSIGN          reduce using rule 18 (type_specifier -> FLOAT .)
+    ASSIGN_TIMES    reduce using rule 18 (type_specifier -> FLOAT .)
+    ASSIGN_DIVIDE   reduce using rule 18 (type_specifier -> FLOAT .)
+    ASSIGN_REMAINDER reduce using rule 18 (type_specifier -> FLOAT .)
+    ASSIGN_PLUS     reduce using rule 18 (type_specifier -> FLOAT .)
+    ASSIGN_MINUS    reduce using rule 18 (type_specifier -> FLOAT .)
+    UPPERSAND       reduce using rule 18 (type_specifier -> FLOAT .)
+    TIMES           reduce using rule 18 (type_specifier -> FLOAT .)
+    PLUS            reduce using rule 18 (type_specifier -> FLOAT .)
+    MINUS           reduce using rule 18 (type_specifier -> FLOAT .)
+    NOT             reduce using rule 18 (type_specifier -> FLOAT .)
+    ID              reduce using rule 18 (type_specifier -> FLOAT .)
+    $end            reduce using rule 18 (type_specifier -> FLOAT .)
+
+
+state 16
+
+    (19) assignment_operator -> ASSIGN .
+
+    INT_CONST       reduce using rule 19 (assignment_operator -> ASSIGN .)
+    FLOAT_CONST     reduce using rule 19 (assignment_operator -> ASSIGN .)
+    STRING_CONST    reduce using rule 19 (assignment_operator -> ASSIGN .)
+    VOID            reduce using rule 19 (assignment_operator -> ASSIGN .)
+    CHAR            reduce using rule 19 (assignment_operator -> ASSIGN .)
+    INT             reduce using rule 19 (assignment_operator -> ASSIGN .)
+    FLOAT           reduce using rule 19 (assignment_operator -> ASSIGN .)
+    ASSIGN          reduce using rule 19 (assignment_operator -> ASSIGN .)
+    ASSIGN_TIMES    reduce using rule 19 (assignment_operator -> ASSIGN .)
+    ASSIGN_DIVIDE   reduce using rule 19 (assignment_operator -> ASSIGN .)
+    ASSIGN_REMAINDER reduce using rule 19 (assignment_operator -> ASSIGN .)
+    ASSIGN_PLUS     reduce using rule 19 (assignment_operator -> ASSIGN .)
+    ASSIGN_MINUS    reduce using rule 19 (assignment_operator -> ASSIGN .)
+    UPPERSAND       reduce using rule 19 (assignment_operator -> ASSIGN .)
+    TIMES           reduce using rule 19 (assignment_operator -> ASSIGN .)
+    PLUS            reduce using rule 19 (assignment_operator -> ASSIGN .)
+    MINUS           reduce using rule 19 (assignment_operator -> ASSIGN .)
+    NOT             reduce using rule 19 (assignment_operator -> ASSIGN .)
+    ID              reduce using rule 19 (assignment_operator -> ASSIGN .)
+    $end            reduce using rule 19 (assignment_operator -> ASSIGN .)
+
+
+state 17
+
+    (20) assignment_operator -> ASSIGN_TIMES .
+
+    INT_CONST       reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    FLOAT_CONST     reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    STRING_CONST    reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    VOID            reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    CHAR            reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    INT             reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    FLOAT           reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    ASSIGN          reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    ASSIGN_TIMES    reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    ASSIGN_DIVIDE   reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    ASSIGN_REMAINDER reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    ASSIGN_PLUS     reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    ASSIGN_MINUS    reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    UPPERSAND       reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    TIMES           reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    PLUS            reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    MINUS           reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    NOT             reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    ID              reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+    $end            reduce using rule 20 (assignment_operator -> ASSIGN_TIMES .)
+
+
+state 18
+
+    (21) assignment_operator -> ASSIGN_DIVIDE .
+
+    INT_CONST       reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    FLOAT_CONST     reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    STRING_CONST    reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    VOID            reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    CHAR            reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    INT             reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    FLOAT           reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    ASSIGN          reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    ASSIGN_TIMES    reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    ASSIGN_DIVIDE   reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    ASSIGN_REMAINDER reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    ASSIGN_PLUS     reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    ASSIGN_MINUS    reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    UPPERSAND       reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    TIMES           reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    PLUS            reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    MINUS           reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    NOT             reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    ID              reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+    $end            reduce using rule 21 (assignment_operator -> ASSIGN_DIVIDE .)
+
+
+state 19
+
+    (22) assignment_operator -> ASSIGN_REMAINDER .
+
+    INT_CONST       reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    FLOAT_CONST     reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    STRING_CONST    reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    VOID            reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    CHAR            reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    INT             reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    FLOAT           reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    ASSIGN          reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    ASSIGN_TIMES    reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    ASSIGN_DIVIDE   reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    ASSIGN_REMAINDER reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    ASSIGN_PLUS     reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    ASSIGN_MINUS    reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    UPPERSAND       reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    TIMES           reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    PLUS            reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    MINUS           reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    NOT             reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    ID              reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+    $end            reduce using rule 22 (assignment_operator -> ASSIGN_REMAINDER .)
+
+
+state 20
+
+    (23) assignment_operator -> ASSIGN_PLUS .
+
+    INT_CONST       reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    FLOAT_CONST     reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    STRING_CONST    reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    VOID            reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    CHAR            reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    INT             reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    FLOAT           reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    ASSIGN          reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    ASSIGN_TIMES    reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    ASSIGN_DIVIDE   reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    ASSIGN_REMAINDER reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    ASSIGN_PLUS     reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    ASSIGN_MINUS    reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    UPPERSAND       reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    TIMES           reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    PLUS            reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    MINUS           reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    NOT             reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    ID              reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+    $end            reduce using rule 23 (assignment_operator -> ASSIGN_PLUS .)
+
+
+state 21
+
+    (24) assignment_operator -> ASSIGN_MINUS .
+
+    INT_CONST       reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    FLOAT_CONST     reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    STRING_CONST    reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    VOID            reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    CHAR            reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    INT             reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    FLOAT           reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    ASSIGN          reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    ASSIGN_TIMES    reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    ASSIGN_DIVIDE   reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    ASSIGN_REMAINDER reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    ASSIGN_PLUS     reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    ASSIGN_MINUS    reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    UPPERSAND       reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    TIMES           reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    PLUS            reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    MINUS           reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    NOT             reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    ID              reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+    $end            reduce using rule 24 (assignment_operator -> ASSIGN_MINUS .)
+
+
+state 22
+
+    (10) unary_operator -> UPPERSAND .
+
+    INT_CONST       reduce using rule 10 (unary_operator -> UPPERSAND .)
+    FLOAT_CONST     reduce using rule 10 (unary_operator -> UPPERSAND .)
+    STRING_CONST    reduce using rule 10 (unary_operator -> UPPERSAND .)
+    VOID            reduce using rule 10 (unary_operator -> UPPERSAND .)
+    CHAR            reduce using rule 10 (unary_operator -> UPPERSAND .)
+    INT             reduce using rule 10 (unary_operator -> UPPERSAND .)
+    FLOAT           reduce using rule 10 (unary_operator -> UPPERSAND .)
+    ASSIGN          reduce using rule 10 (unary_operator -> UPPERSAND .)
+    ASSIGN_TIMES    reduce using rule 10 (unary_operator -> UPPERSAND .)
+    ASSIGN_DIVIDE   reduce using rule 10 (unary_operator -> UPPERSAND .)
+    ASSIGN_REMAINDER reduce using rule 10 (unary_operator -> UPPERSAND .)
+    ASSIGN_PLUS     reduce using rule 10 (unary_operator -> UPPERSAND .)
+    ASSIGN_MINUS    reduce using rule 10 (unary_operator -> UPPERSAND .)
+    UPPERSAND       reduce using rule 10 (unary_operator -> UPPERSAND .)
+    TIMES           reduce using rule 10 (unary_operator -> UPPERSAND .)
+    PLUS            reduce using rule 10 (unary_operator -> UPPERSAND .)
+    MINUS           reduce using rule 10 (unary_operator -> UPPERSAND .)
+    NOT             reduce using rule 10 (unary_operator -> UPPERSAND .)
+    ID              reduce using rule 10 (unary_operator -> UPPERSAND .)
+    $end            reduce using rule 10 (unary_operator -> UPPERSAND .)
+
+
+state 23
+
+    (11) unary_operator -> TIMES .
+
+    INT_CONST       reduce using rule 11 (unary_operator -> TIMES .)
+    FLOAT_CONST     reduce using rule 11 (unary_operator -> TIMES .)
+    STRING_CONST    reduce using rule 11 (unary_operator -> TIMES .)
+    VOID            reduce using rule 11 (unary_operator -> TIMES .)
+    CHAR            reduce using rule 11 (unary_operator -> TIMES .)
+    INT             reduce using rule 11 (unary_operator -> TIMES .)
+    FLOAT           reduce using rule 11 (unary_operator -> TIMES .)
+    ASSIGN          reduce using rule 11 (unary_operator -> TIMES .)
+    ASSIGN_TIMES    reduce using rule 11 (unary_operator -> TIMES .)
+    ASSIGN_DIVIDE   reduce using rule 11 (unary_operator -> TIMES .)
+    ASSIGN_REMAINDER reduce using rule 11 (unary_operator -> TIMES .)
+    ASSIGN_PLUS     reduce using rule 11 (unary_operator -> TIMES .)
+    ASSIGN_MINUS    reduce using rule 11 (unary_operator -> TIMES .)
+    UPPERSAND       reduce using rule 11 (unary_operator -> TIMES .)
+    TIMES           reduce using rule 11 (unary_operator -> TIMES .)
+    PLUS            reduce using rule 11 (unary_operator -> TIMES .)
+    MINUS           reduce using rule 11 (unary_operator -> TIMES .)
+    NOT             reduce using rule 11 (unary_operator -> TIMES .)
+    ID              reduce using rule 11 (unary_operator -> TIMES .)
+    $end            reduce using rule 11 (unary_operator -> TIMES .)
+
+
+state 24
+
+    (12) unary_operator -> PLUS .
+
+    INT_CONST       reduce using rule 12 (unary_operator -> PLUS .)
+    FLOAT_CONST     reduce using rule 12 (unary_operator -> PLUS .)
+    STRING_CONST    reduce using rule 12 (unary_operator -> PLUS .)
+    VOID            reduce using rule 12 (unary_operator -> PLUS .)
+    CHAR            reduce using rule 12 (unary_operator -> PLUS .)
+    INT             reduce using rule 12 (unary_operator -> PLUS .)
+    FLOAT           reduce using rule 12 (unary_operator -> PLUS .)
+    ASSIGN          reduce using rule 12 (unary_operator -> PLUS .)
+    ASSIGN_TIMES    reduce using rule 12 (unary_operator -> PLUS .)
+    ASSIGN_DIVIDE   reduce using rule 12 (unary_operator -> PLUS .)
+    ASSIGN_REMAINDER reduce using rule 12 (unary_operator -> PLUS .)
+    ASSIGN_PLUS     reduce using rule 12 (unary_operator -> PLUS .)
+    ASSIGN_MINUS    reduce using rule 12 (unary_operator -> PLUS .)
+    UPPERSAND       reduce using rule 12 (unary_operator -> PLUS .)
+    TIMES           reduce using rule 12 (unary_operator -> PLUS .)
+    PLUS            reduce using rule 12 (unary_operator -> PLUS .)
+    MINUS           reduce using rule 12 (unary_operator -> PLUS .)
+    NOT             reduce using rule 12 (unary_operator -> PLUS .)
+    ID              reduce using rule 12 (unary_operator -> PLUS .)
+    $end            reduce using rule 12 (unary_operator -> PLUS .)
+
+
+state 25
+
+    (13) unary_operator -> MINUS .
+
+    INT_CONST       reduce using rule 13 (unary_operator -> MINUS .)
+    FLOAT_CONST     reduce using rule 13 (unary_operator -> MINUS .)
+    STRING_CONST    reduce using rule 13 (unary_operator -> MINUS .)
+    VOID            reduce using rule 13 (unary_operator -> MINUS .)
+    CHAR            reduce using rule 13 (unary_operator -> MINUS .)
+    INT             reduce using rule 13 (unary_operator -> MINUS .)
+    FLOAT           reduce using rule 13 (unary_operator -> MINUS .)
+    ASSIGN          reduce using rule 13 (unary_operator -> MINUS .)
+    ASSIGN_TIMES    reduce using rule 13 (unary_operator -> MINUS .)
+    ASSIGN_DIVIDE   reduce using rule 13 (unary_operator -> MINUS .)
+    ASSIGN_REMAINDER reduce using rule 13 (unary_operator -> MINUS .)
+    ASSIGN_PLUS     reduce using rule 13 (unary_operator -> MINUS .)
+    ASSIGN_MINUS    reduce using rule 13 (unary_operator -> MINUS .)
+    UPPERSAND       reduce using rule 13 (unary_operator -> MINUS .)
+    TIMES           reduce using rule 13 (unary_operator -> MINUS .)
+    PLUS            reduce using rule 13 (unary_operator -> MINUS .)
+    MINUS           reduce using rule 13 (unary_operator -> MINUS .)
+    NOT             reduce using rule 13 (unary_operator -> MINUS .)
+    ID              reduce using rule 13 (unary_operator -> MINUS .)
+    $end            reduce using rule 13 (unary_operator -> MINUS .)
+
+
+state 26
+
+    (14) unary_operator -> NOT .
+
+    INT_CONST       reduce using rule 14 (unary_operator -> NOT .)
+    FLOAT_CONST     reduce using rule 14 (unary_operator -> NOT .)
+    STRING_CONST    reduce using rule 14 (unary_operator -> NOT .)
+    VOID            reduce using rule 14 (unary_operator -> NOT .)
+    CHAR            reduce using rule 14 (unary_operator -> NOT .)
+    INT             reduce using rule 14 (unary_operator -> NOT .)
+    FLOAT           reduce using rule 14 (unary_operator -> NOT .)
+    ASSIGN          reduce using rule 14 (unary_operator -> NOT .)
+    ASSIGN_TIMES    reduce using rule 14 (unary_operator -> NOT .)
+    ASSIGN_DIVIDE   reduce using rule 14 (unary_operator -> NOT .)
+    ASSIGN_REMAINDER reduce using rule 14 (unary_operator -> NOT .)
+    ASSIGN_PLUS     reduce using rule 14 (unary_operator -> NOT .)
+    ASSIGN_MINUS    reduce using rule 14 (unary_operator -> NOT .)
+    UPPERSAND       reduce using rule 14 (unary_operator -> NOT .)
+    TIMES           reduce using rule 14 (unary_operator -> NOT .)
+    PLUS            reduce using rule 14 (unary_operator -> NOT .)
+    MINUS           reduce using rule 14 (unary_operator -> NOT .)
+    NOT             reduce using rule 14 (unary_operator -> NOT .)
+    ID              reduce using rule 14 (unary_operator -> NOT .)
+    $end            reduce using rule 14 (unary_operator -> NOT .)
+
+
+state 27
+
+    (9) identifier -> ID .
+
+    INT_CONST       reduce using rule 9 (identifier -> ID .)
+    FLOAT_CONST     reduce using rule 9 (identifier -> ID .)
+    STRING_CONST    reduce using rule 9 (identifier -> ID .)
+    VOID            reduce using rule 9 (identifier -> ID .)
+    CHAR            reduce using rule 9 (identifier -> ID .)
+    INT             reduce using rule 9 (identifier -> ID .)
+    FLOAT           reduce using rule 9 (identifier -> ID .)
+    ASSIGN          reduce using rule 9 (identifier -> ID .)
+    ASSIGN_TIMES    reduce using rule 9 (identifier -> ID .)
+    ASSIGN_DIVIDE   reduce using rule 9 (identifier -> ID .)
+    ASSIGN_REMAINDER reduce using rule 9 (identifier -> ID .)
+    ASSIGN_PLUS     reduce using rule 9 (identifier -> ID .)
+    ASSIGN_MINUS    reduce using rule 9 (identifier -> ID .)
+    UPPERSAND       reduce using rule 9 (identifier -> ID .)
+    TIMES           reduce using rule 9 (identifier -> ID .)
+    PLUS            reduce using rule 9 (identifier -> ID .)
+    MINUS           reduce using rule 9 (identifier -> ID .)
+    NOT             reduce using rule 9 (identifier -> ID .)
+    ID              reduce using rule 9 (identifier -> ID .)
+    $end            reduce using rule 9 (identifier -> ID .)
+
+
+state 28
+
+    (3) global_declaration_list -> global_declaration_list global_declaration .
+
+    INT_CONST       reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    FLOAT_CONST     reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    STRING_CONST    reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    VOID            reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    CHAR            reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    INT             reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    FLOAT           reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    ASSIGN          reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    ASSIGN_TIMES    reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    ASSIGN_DIVIDE   reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    ASSIGN_REMAINDER reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    ASSIGN_PLUS     reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    ASSIGN_MINUS    reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    UPPERSAND       reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    TIMES           reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    PLUS            reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    MINUS           reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    NOT             reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    ID              reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+    $end            reduce using rule 3 (global_declaration_list -> global_declaration_list global_declaration .)
+

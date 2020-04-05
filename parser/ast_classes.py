@@ -80,6 +80,24 @@ class Node(object):
         for (child_name, child) in self.children():
             child.show(buf, offset + 4, attrnames, nodenames, showcoord, child_name)
 
+class Coord(object):
+    """ Coordinates of a syntactic element. Consists of:
+            - Line number
+            - (optional) column number, for the Lexer
+    """
+    __slots__ = ('line', 'column')
+
+    def __init__(self, line, column=None):
+        self.line = line
+        self.column = column
+
+    def __str__(self):
+        if self.line:
+            coord_str = "   @ %s:%s" % (self.line, self.column)
+        else:
+            coord_str = ""
+        return coord_str
+
 class Program(Node):
     __slots__ = ('gdecls', 'coord')
 
@@ -108,6 +126,57 @@ class Constant(Node):
         return tuple(nodelist)
 
     attr_names = ('type', 'value', )
+
+class Type(Node):
+    __slots__ = ('names', 'coord')
+
+    def __init__(self, names, coord=None):
+        self.names = names
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        return tuple(nodelist)
+
+    attr_names = ('names', )
+
+class Assignment(Node):
+    __slots__ = ('op', 'coord')
+
+    def __init__(self, op, coord=None):
+        self.op = op
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        return tuple(nodelist)
+
+    attr_names = ('op', )
+
+class UnaryOp(Node):
+    __slots__ = ('op', 'coord')
+
+    def __init__(self, op, coord=None):
+        self.op = op
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        return tuple(nodelist)
+
+    attr_names = ('op', )
+
+class ID(Node):
+    __slots__ = ('name', 'coord')
+    def __init__(self, name, coord=None):
+        self.name = name
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        return tuple(nodelist)
+
+    attr_names = ('name', )
 
 #  =============================================
 # Don't really know | if we should implement the following

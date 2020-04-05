@@ -15,6 +15,17 @@ class UCParser:
         self.parser = yacc(module=self)
         pass
 
+
+
+    def _token_coord(self, p, token_idx):
+        last_cr = p.lexer.lexer.lexdata.rfind('\n', 0, p.lexpos(token_idx))
+        if last_cr < 0:
+            last_cr = -1
+        column = (p.lexpos(token_idx) - (last_cr))
+        return Coord(p.lineno(token_idx), column)
+
+
+
     def parse(self, text, filename='', debug=False):
         """ Parses uC code and returns an AST.
             text:
@@ -36,7 +47,8 @@ class UCParser:
     def p_program(self, p):
         """ program  : global_declaration_list
         """
-        p[0] = Program(p[1])
+        coord = self._token_coord(p,1)
+        p[0] = Program(p[1], coord)
 
     def p_global_declaration_list(self, p):
         """ global_declaration_list : global_declaration
@@ -44,25 +56,71 @@ class UCParser:
         """
         p[0] = [p[1]] if len(p) == 2 else p[1] + [p[2]]
 
+    # This is not right, just a workaround to make the compiler work
     def p_global_declaration(self, p):
         """ global_declaration : constant
+                               | type_specifier
+                               | assignment_operator
+                               | unary_operator
+                               | identifier
         """
+
         p[0] = p[1]
+
+    def p_identifier(self, p):
+        """ identifier  : ID
+        """
+        coord = self._token_coord(p,1)
+        p[0] = ID(p[1], coord)
+
+    def p_unary_operator(self, p):
+        """ unary_operator : UPPERSAND
+                           | TIMES
+                           | PLUS
+                           | MINUS
+                           | NOT
+        """
+        coord = self._token_coord(p,1)
+        p[0] = UnaryOp(p[1], coord)
+
+
+    def p_type_specifier(self, p):
+        """ type_specifier : VOID
+                           | CHAR
+                           | INT
+                           | FLOAT
+        """
+        coord = self._token_coord(p,1)
+        p[0] = Type([p[1]], coord)
+
+    def p_assignment_operator(self, p):
+        """ assignment_operator : ASSIGN
+                                | ASSIGN_TIMES
+                                | ASSIGN_DIVIDE
+                                | ASSIGN_REMAINDER
+                                | ASSIGN_PLUS
+                                | ASSIGN_MINUS
+        """
+        coord = self._token_coord(p,1)
+        p[0] = Assignment(p[1], coord)
 
     def p_constant_1(self, p):
         """ constant : INT_CONST
         """
-        p[0] = Constant('int', p[1])
+        coord = self._token_coord(p,1)
+        p[0] = Constant('int', p[1], coord)
 
     def p_constant_2(self, p):
         """ constant : FLOAT_CONST
         """
-        p[0] = Constant('float', p[1])
+        coord = self._token_coord(p,1)
+        p[0] = Constant('float', p[1], coord)
 
     def p_constant_3(self, p):
         """ constant : STRING_CONST
         """
-        p[0] = Constant('string', p[1])
+        coord = self._token_coord(p,1)
+        p[0] = Constant('string', p[1], coord)
 
     def p_error (self, p):
         if p:

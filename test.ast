@@ -1,0 +1,4 @@
+Program: 
+    Constant: int, 42
+    Constant: string, "Test"
+    Constant: float, 42.42
