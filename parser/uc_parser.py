@@ -63,6 +63,7 @@ class UCParser:
         """ global_declaration : postfix_expression
                                | type_specifier
                                | assignment_operator
+                               | assigment_expression
                                | cast_expression
                                | unary_expression
                                | binary_expression
