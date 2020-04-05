@@ -227,7 +227,7 @@ class ExprList(Node):
     def children(self):
         nodelist = []
         for i, child in enumerate(self.exprs or []):
-            nodelist.append(("exprs[%d]" % i, child))
+            nodelist.append(("exprs[{}]".format(i), child))
         return tuple(nodelist)
 
     attr_names = ()

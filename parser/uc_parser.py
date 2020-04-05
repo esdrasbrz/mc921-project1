@@ -60,13 +60,7 @@ class UCParser:
 
     # This is not right, just a workaround to make the compiler work
     def p_global_declaration(self, p):
-        """ global_declaration : postfix_expression
-                               | type_specifier
-                               | argument_expression
-                               | cast_expression
-                               | unary_expression
-                               | binary_expression
-                               | constant_expression
+        """ global_declaration : constant_expression
         """
         p[0] = p[1]
 
@@ -77,13 +71,14 @@ class UCParser:
 
     def p_postfix_expression_2(self, p):
         """ postfix_expression : postfix_expression PLUS_PLUS
-                            | postfix_expression MINUS_MINUS
+                               | postfix_expression MINUS_MINUS
         """
         p[0] = ast_classes.UnaryOp(p[2], p[1], p[1].coord)
 
     def p_postfix_expression_3(self, p):
         """ postfix_expression  : postfix_expression LPAREN RPAREN
                                 | postfix_expression LPAREN argument_expression RPAREN
+                                | postfix_expression LBRACKET expression RBRACKET
         """
         p[0] = ast_classes.FuncCall(p[1], p[3] if len(p) == 5 else None, p[1].coord)
 
@@ -97,12 +92,30 @@ class UCParser:
             p[1].exprs.append(p[3])
             p[0] = p[1]
 
+    def p_expression_1(self, p):
+        """ expression  : assignment_expression
+        """
+        p[0] = p[1]
 
-    def p_primary_expression(self, p):
+    def p_expression_2(self, p):
+        """ expression  : expression COMMA assignment_expression
+        """
+        if not isinstance(p[1], ast_classes.ExprList):
+            p[1] = ast_classes.ExprList(p[1], p[1].coord)
+        p[1].exprs.append(p[3])
+        p[0] = p[1]
+
+
+    def p_primary_expression_1(self, p):
         """ primary_expression : identifier
                                | constant
         """
         p[0] = p[1]
+
+    def p_primary_expression_2(self, p):
+        """ primary_expression : LPAREN expression RPAREN
+        """
+        p[0] = p[2]
 
     def p_cast_expression_1(self, p):
         """ cast_expression : postfix_expression
