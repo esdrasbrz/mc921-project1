@@ -216,3 +216,35 @@ class ID(Node):
         return tuple(nodelist)
 
     attr_names = ('name', )
+
+
+class ExprList(Node):
+    __slots__ = ('exprs', 'coord')
+    def __init__(self, exprs, coord=None):
+        self.exprs = exprs
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        for i, child in enumerate(self.exprs or []):
+            nodelist.append(("exprs[%d]" % i, child))
+        return tuple(nodelist)
+
+    attr_names = ()
+
+class FuncCall(Node):
+    __slots__ = ('name', 'args', 'coord')
+    def __init__(self, name, args, coord=None):
+        self.name = name
+        self.args = args
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.name is not None:
+            nodelist.append(("name", self.name))
+        if self.args is not None:
+            nodelist.append(("args", self.args))
+        return tuple(nodelist)
+
+    attr_names = ()

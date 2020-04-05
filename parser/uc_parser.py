@@ -62,7 +62,7 @@ class UCParser:
     def p_global_declaration(self, p):
         """ global_declaration : postfix_expression
                                | type_specifier
-                               | assignment_expression
+                               | argument_expression
                                | cast_expression
                                | unary_expression
                                | binary_expression
@@ -80,6 +80,23 @@ class UCParser:
                             | postfix_expression MINUS_MINUS
         """
         p[0] = ast_classes.UnaryOp(p[2], p[1], p[1].coord)
+
+    def p_postfix_expression_3(self, p):
+        """ postfix_expression  : postfix_expression LPAREN RPAREN
+                                | postfix_expression LPAREN argument_expression RPAREN
+        """
+        p[0] = ast_classes.FuncCall(p[1], p[3] if len(p) == 5 else None, p[1].coord)
+
+    def p_argument_expression(self, p):
+        """ argument_expression : assignment_expression
+                                | argument_expression COMMA assignment_expression
+        """
+        if len(p) == 2: # single expr
+            p[0] = ast_classes.ExprList([p[1]], p[1].coord)
+        else:
+            p[1].exprs.append(p[3])
+            p[0] = p[1]
+
 
     def p_primary_expression(self, p):
         """ primary_expression : identifier
