@@ -38,8 +38,12 @@ class UCParser:
                 debug=debug)
 
     precedence = (
-        ('left', 'PLUS'),
-        ('left', 'TIMES')
+        ('left', 'OR'),
+        ('left', 'AND'),
+        ('left', 'EQUAL', 'DIFFERENT'),
+        ('left', 'BIGGER', 'BIGGER_EQUAL', 'SMALLER', 'SMALLER_EQUAL'),
+        ('left', 'PLUS', 'MINUS'),
+        ('left', 'TIMES', 'DIVIDE', 'MOD')
         )
 
     def p_program(self, p):
@@ -61,6 +65,8 @@ class UCParser:
                                | assignment_operator
                                | cast_expression
                                | unary_expression
+                               | binary_expression
+                               | constant_expression
         """
         p[0] = p[1]
 
