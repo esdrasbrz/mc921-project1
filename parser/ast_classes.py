@@ -76,7 +76,6 @@ class Node(object):
             if self.coord:
                 buf.write('%s' % self.coord)
         buf.write('\n')
-
         for (child_name, child) in self.children():
             child.show(buf, offset + 4, attrnames, nodenames, showcoord, child_name)
 
@@ -97,6 +96,21 @@ class Coord(object):
         else:
             coord_str = ""
         return coord_str
+
+class Cast(Node):
+    __slots__ = ('new_type', 'expr', 'coord')
+    def __init__(self, new_type, expr, coord=None):
+        self.new_type = new_type
+        self.expr = expr
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.new_type is not None: nodelist.append(("new_type", self.new_type))
+        if self.expr is not None: nodelist.append(("expr", self.expr))
+        return tuple(nodelist)
+
+    attr_names = ()
 
 class Program(Node):
     __slots__ = ('gdecls', 'coord')
@@ -154,15 +168,17 @@ class Assignment(Node):
     attr_names = ('op', )
 
 class UnaryOp(Node):
-    __slots__ = ('op', 'coord')
-
-    def __init__(self, op, coord=None):
+    __slots__ = ('op', 'expr', 'coord')
+    def __init__(self, op, expr, coord=None):
         self.op = op
+        self.expr = expr
         self.coord = coord
 
     def children(self):
         nodelist = []
+        if self.expr is not None: nodelist.append(("expr", self.expr))
         return tuple(nodelist)
+
 
     attr_names = ('op', )
 
@@ -177,90 +193,3 @@ class ID(Node):
         return tuple(nodelist)
 
     attr_names = ('name', )
-
-#  =============================================
-# Don't really know | if we should implement the following
-# class NodeVisitor(object):
-#     """ A base NodeVisitor class for visiting uc_ast nodes.
-#         Subclass it and define your own visit_XXX methods, where
-#         XXX is the class name you want to visit with these
-#         methods.
-
-#         For example:
-
-#         class ConstantVisitor(NodeVisitor):
-#             def __init__(self):
-#                 self.values = []
-
-#             def visit_Constant(self, node):
-#                 self.values.append(node.value)
-
-#         Creates a list of values of all the constant nodes
-#         encountered below the given node. To use it:
-
-#         cv = ConstantVisitor()
-#         cv.visit(node)
-
-#         Notes:
-
-#         *   generic_visit() will be called for AST nodes for which
-#             no visit_XXX method was defined.
-#         *   The children of nodes for which a visit_XXX was
-#             defined will not be visited - if you need this, call
-#             generic_visit() on the node.
-#             You can use:
-#                 NodeVisitor.generic_visit(self, node)
-#         *   Modeled after Python's own AST visiting facilities
-#             (the ast module of Python 3.0)
-#     """
-
-#     _method_cache = None
-
-#     def visit(self, node):
-#         """ Visit a node.
-#         """
-
-#         if self._method_cache is None:
-#             self._method_cache = {}
-
-#         visitor = self._method_cache.get(node.__class__.__name__, None)
-#         if visitor is None:
-#             method = 'visit_' + node.__class__.__name__
-#             visitor = getattr(self, method, self.generic_visit)
-#             self._method_cache[node.__class__.__name__] = visitor
-
-#         return visitor(node)
-
-#     def generic_visit(self, node):
-#         """ Called if no explicit visitor function exists for a
-#             node. Implements preorder visiting of the node.
-#         """
-#         for c in node:
-#             self.visit(c)
-
-
-# class ConstantVisitor(NodeVisitor):
-#     def __init__(self):
-#         self.values = []
-
-#     def visit_Constant(self, node):
-#         self.values.append(node.value)
-
-
-# class BinaryOp(Node):
-#     __slots__ = ('op', 'lvalue', 'rvalue', 'coord')
-
-#     def __init__(self, op, left, right, coord=None):
-#         self.op = op
-#         self.lvalue = left
-#         self.rvalue = right
-#         self.coord = coord
-
-#     def children(self):
-#         nodelist = []
-#         if self.lvalue is not None: nodelist.append(("lvalue", self.lvalue))
-#         if self.rvalue is not None: nodelist.append(("rvalue", self.rvalue))
-#         return tuple(nodelist)
-
-#     attr_names = ('op', )
-

@@ -58,14 +58,52 @@ class UCParser:
 
     # This is not right, just a workaround to make the compiler work
     def p_global_declaration(self, p):
-        """ global_declaration : constant
+        """ global_declaration : postfix_expression
                                | type_specifier
                                | assignment_operator
-                               | unary_operator
-                               | identifier
+                               | cast_expression
+                               | unary_expression
         """
-
         p[0] = p[1]
+
+    def p_postfix_expression_1(self, p):
+        """ postfix_expression : primary_expression
+        """
+        p[0] = p[1]
+
+    def p_postfix_expression_2(self, p):
+        """ postfix_expression : postfix_expression PLUS_PLUS
+                            | postfix_expression MINUS_MINUS
+        """
+        p[0] = UnaryOp(p[2], p[1], p[1].coord)
+
+    def p_primary_expression(self, p):
+        """ primary_expression : identifier
+                               | constant
+        """
+        p[0] = p[1]
+
+    def p_cast_expression_1(self, p):
+        """ cast_expression : postfix_expression
+        """
+        p[0] = p[1]
+
+    def p_cast_expression_2(self, p):
+        """ cast_expression : LPAREN type_specifier RPAREN cast_expression
+        """
+        p[0] = Cast(p[2], p[4], self._token_coord(p, 1))
+
+    def p_unary_expression_1(self, p):
+        """ unary_expression : postfix_expression
+        """
+        p[0] = p[1]
+
+    def p_unary_expression_2(self, p):
+        """ unary_expression    : PLUS_PLUS unary_expression
+                                | MINUS_MINUS unary_expression
+                                | unary_operator cast_expression
+        """
+        p[0] = UnaryOp(p[1], p[2], p[2].coord)
 
     def p_identifier(self, p):
         """ identifier  : ID
@@ -80,9 +118,7 @@ class UCParser:
                            | MINUS
                            | NOT
         """
-        coord = self._token_coord(p,1)
-        p[0] = UnaryOp(p[1], coord)
-
+        p[0] = p[1]
 
     def p_type_specifier(self, p):
         """ type_specifier : VOID
