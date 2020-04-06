@@ -60,9 +60,33 @@ class UCParser:
 
     # This is not right, just a workaround to make the compiler work
     def p_global_declaration(self, p):
-        """ global_declaration : constant_expression
+        """ global_declaration : initializer
         """
         p[0] = p[1]
+
+    def p_initializer_1(self, p):
+        """ initializer : assignment_expression
+        """
+        p[0] = p[1]
+
+    def p_initializer_2(self, p):
+        """ initializer : LBRACES initializer_list RBRACES
+                        | LBRACES initializer_list COMMA RBRACES
+        """
+        if p[2] is None:
+            p[0] = ast_classes.InitList([], self._token_coord(p, 1))
+        else:
+            p[0] = p[2]
+
+    def p_initializer_list(self, p):
+        """ initializer_list : initializer
+                             | initializer_list COMMA initializer
+        """
+        if len(p) == 2: # single initializer
+            p[0] = ast_classes.InitList([p[1]], p[1].coord)
+        else:
+            p[1].exprs.append(p[3])
+            p[0] = p[1]
 
     def p_postfix_expression_1(self, p):
         """ postfix_expression : primary_expression

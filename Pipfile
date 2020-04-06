@@ -5,6 +5,7 @@ verify_ssl = true
 
 [scripts]
 tests = "pytest"
+susy = "python3 uc_compiler.py test.uc -at-susy"
 
 [packages]
 ply = "==3.11"

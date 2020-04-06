@@ -248,3 +248,18 @@ class FuncCall(Node):
         return tuple(nodelist)
 
     attr_names = ()
+
+
+class InitList(Node):
+    __slots__ = ('exprs', 'coord')
+    def __init__(self, exprs, coord=None):
+        self.exprs = exprs
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        for i, child in enumerate(self.exprs or []):
+            nodelist.append(("exprs[{}]".format(i), child))
+        return tuple(nodelist)
+
+    attr_names = ()
