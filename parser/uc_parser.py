@@ -24,6 +24,38 @@ class UCParser:
         column = (p.lexpos(token_idx) - (last_cr))
         return ast_classes.Coord(p.lineno(token_idx), column)
 
+
+    def _type_modify_decl(self, decl, modifier):
+        """ Tacks a type modifier on a declarator, and returns
+            the modified declarator.
+            Note: the declarator and modifier may be modified
+        """
+        modifier_head = modifier
+        modifier_tail = modifier
+
+        # The modifier may be a nested list. Reach its tail.
+        while modifier_tail.type:
+            modifier_tail = modifier_tail.type
+
+        # If the decl is a basic type, just tack the modifier onto it
+        if isinstance(decl, ast_classes.VarDecl):
+            modifier_tail.type = decl
+            return modifier
+        else:
+            # Otherwise, the decl is a list of modifiers. Reach
+            # its tail and splice the modifier onto the tail,
+            # pointing to the underlying basic type.
+            decl_tail = decl
+
+            while not isinstance(decl_tail.type, ast_classes.VarDecl):
+                decl_tail = decl_tail.type
+
+            modifier_tail.type = decl_tail.type
+            decl_tail.type = modifier_head
+            return decl
+
+
+
     def parse(self, text, filename='', debug=False):
         """ Parses uC code and returns an AST.
             text:
@@ -60,9 +92,37 @@ class UCParser:
 
     # This is not right, just a workaround to make the compiler work
     def p_global_declaration(self, p):
-        """ global_declaration : initializer
+        """ global_declaration : declarator
         """
         p[0] = p[1]
+
+    def p_declarator(self, p):
+        """ declarator : direct_declarator
+        """
+        p[0] = p[1]
+
+    def p_direct_declarator_1(self, p):
+        """ direct_declarator : identifier
+        """
+        p[0] = ast_classes.VarDecl(p[1], None, self._token_coord(p, 1))
+
+    def p_direct_declarator_2(self, p):
+        """ direct_declarator :  LPAREN declarator RPAREN
+        """
+        p[0] = p[2]
+
+    def p_direct_declarator_3(self, p):
+        """ direct_declarator : direct_declarator LBRACKET constant_expression_opt RBRACKET
+        """
+        array = ast_classes.ArrayDecl(None, p[3] if len(p) > 4 else None, p[1].coord)
+        p[0] = self._type_modify_decl(p[1], array)
+
+
+    def p_direct_declarator_4(self, p):
+        """ direct_declarator : direct_declarator LPAREN identifier_list RPAREN
+        """
+        func = ast_classes.FuncDecl(p[3],None, p[1].coord)
+        p[0] = self._type_modify_decl(p[1], func)
 
     def p_initializer_1(self, p):
         """ initializer : assignment_expression
@@ -208,11 +268,27 @@ class UCParser:
         """
         p[0] = p[1]
 
+    def p_constant_expression_opt(self, p):
+        """ constant_expression_opt : binary_expression
+                                    | empty
+        """
+        p[0] = p[1]
+
     def p_identifier(self, p):
         """ identifier : ID
         """
         coord = self._token_coord(p,1)
         p[0] = ast_classes.ID(p[1], coord)
+
+    def p_identifier_list(self, p):
+        """ identifier_list : identifier
+                            | identifier_list COMMA identifier
+        """
+        if len(p) == 2: # single parameter
+            p[0] = ast_classes.ParamList([p[1]], p[1].coord)
+        else:
+            p[1].params.append(p[3])
+            p[0] = p[1]
 
     def p_unary_operator(self, p):
         """ unary_operator : UPPERSAND
@@ -249,6 +325,10 @@ class UCParser:
         """
         coord = self._token_coord(p,1)
         p[0] = ast_classes.Constant('string', p[1], coord)
+
+    def p_empty(self, p):
+        """ empty :"""
+        pass
 
     def p_error (self, p):
         if p:

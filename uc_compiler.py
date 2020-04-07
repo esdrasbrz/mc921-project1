@@ -118,7 +118,6 @@ class Compiler:
         """
         self.parser = UCParser()
         self.ast = self.parser.parse(self.code, '', debug)
-        print(self.ast)
         if susy:
             self.ast.show(showcoord=True)
         elif ast_file is not None:

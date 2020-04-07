@@ -263,3 +263,66 @@ class InitList(Node):
         return tuple(nodelist)
 
     attr_names = ()
+
+
+class ParamList(Node):
+    __slots__ = ('params', 'coord')
+    def __init__(self, params, coord=None):
+        self.params = params
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        for i, child in enumerate(self.params or []):
+            nodelist.append(("params[%d]" % i, child))
+        return tuple(nodelist)
+
+    def __iter__(self):
+        for child in (self.params or []):
+            yield child
+
+    attr_names = ()
+
+class VarDecl(Node):
+    __slots__ = ('declname', 'type', 'coord')
+    def __init__(self, declname, type, coord=None):
+        self.declname = declname
+        self.type = type
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.type is not None: nodelist.append(("type", self.type))
+        return tuple(nodelist)
+
+    attr_names = ('declname',)
+
+class ArrayDecl(Node):
+    __slots__ = ('type', 'dim', 'coord')
+    def __init__(self, type, dim, coord=None):
+        self.type = type
+        self.dim = dim
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.type is not None: nodelist.append(("type", self.type))
+        if self.dim is not None: nodelist.append(("dim", self.dim))
+        return tuple(nodelist)
+
+    attr_names = ()
+
+class FuncDecl(Node):
+    __slots__ = ('args', 'type', 'coord')
+    def __init__(self, args, type, coord=None):
+        self.args = args
+        self.type = type
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.args is not None: nodelist.append(("args", self.args))
+        if self.type is not None: nodelist.append(("type", self.type))
+        return tuple(nodelist)
+
+    attr_names = ()
