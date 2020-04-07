@@ -171,6 +171,30 @@ class Assignment(Node):
 
     attr_names = ('op', )
 
+class Break(Node):
+    __slots__ = ('coord', '__weakref__')
+    def __init__(self, coord=None):
+        self.coord = coord
+
+    def children(self):
+        return ()
+
+    attr_names = ()
+
+class Return(Node):
+    __slots__ = ('expr', 'coord')
+
+    def __init__(self, expr, coord=None):
+        self.expr = expr
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.expr is not None: nodelist.append(("expr", self.expr))
+        return tuple(nodelist)
+
+    attr_names = ()
+
 class UnaryOp(Node):
     __slots__ = ('op', 'expr', 'coord')
     def __init__(self, op, expr, coord=None):

@@ -169,6 +169,17 @@ class UCParser:
             p[1].exprs.append(p[3])
             p[0] = p[1]
 
+    def p_jump_statement_1(self, p):
+        """ jump_statement  : BREAK SEMI
+        """
+        p[0] = ast_classes.Break(self._token_coord(p, 1))
+
+    def p_jump_statement_2(self, p):
+        """ jump_statement  : RETURN SEMI
+                            | RETURN LBRACES expression RBRACES SEMI
+        """
+        p[0] = ast_classes.Return(p[2] if len(p) == 4 else None, self._token_coord(p, 1))
+
     def p_postfix_expression_1(self, p):
         """ postfix_expression : primary_expression
         """
@@ -350,6 +361,31 @@ class UCParser:
     def p_empty(self, p):
         """ empty :"""
         pass
+    def p_declarator(self, p):
+        """ declarator  : direct_declarator
+        """
+        p[0] = p[1]
+
+    def p_direct_declarator_1(self, p):
+        """ direct_declarator   : identifier
+        """
+        p[0] = p[1]
+
+    def p_direct_declarator_2(self, p):
+        """ direct_declarator   : LPAREN declarator RPAREN
+        """
+
+    def p_direct_declarator_3(self, p):
+        """ direct_declarator   : direct_declarator LBRACKET LBRACES constant_expression RBRACES QUESTION RBRACKET
+        """
+
+    def p_direct_declarator_4(self, p):
+        """ direct_declarator   : direct_declarator LPAREN parameter_list RPAREN
+        """
+
+    def p_direct_declarator_5(self, p):
+        """ direct_declarator   : direct_declarator LPAREN LBRACES identifier RBRACES TIMES RPAREN
+        """
 
     def p_error (self, p):
         if p:
