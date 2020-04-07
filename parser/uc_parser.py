@@ -80,6 +80,44 @@ class UCParser:
         """
         p[0] = p[1]
 
+    def p_block_item(self, p):
+        """ block_item  : declaration
+                        | statement
+        """
+        if isinstance(p[1], list):
+            p[0] = p[1]
+        else:
+            p[0] = [p[1]]
+
+    def p_block_item_list(self, p):
+        """ block_item_list : block_item
+                            | block_item_list block_item
+        """
+        if len(p) == 2 or p[2] == [None]:
+            p[0] = p[1]
+        else:
+            p[0] = p[1] + p[2]
+
+    def p_compound_statement(self, p):
+        """compound_statement   : LBRACES block_item_list RBRACES
+        """
+        p[0] = ast_classes.Compound(block_items=p[2], coord=self._token_coord(p, 1))
+
+    def p_selection_statement_1(self, p):
+        """ selection_statement : IF LPAREN expression RPAREN statement
+        """
+        p[0] = ast_classes.If(p[3], p[5], None, self._token_coord(p, 1))
+
+    def p_selection_statement_2(self, p):
+        """ selection_statement : IF LPAREN expression RPAREN statement ELSE statement
+        """
+        p[0] = ast_classes.If(p[3], p[5], p[7], self._token_coord(p, 1))
+
+    def p_iteration_statement_1(self, p):
+        """ iteration_statement : WHILE LPAREN expression RPAREN statement
+        """
+        p[0] = ast_classes.While(p[3], p[5], self._token_coord(p, 1))
+
     def p_postfix_expression_2(self, p):
         """ postfix_expression : postfix_expression PLUS_PLUS
                                | postfix_expression MINUS_MINUS
