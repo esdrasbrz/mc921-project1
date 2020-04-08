@@ -139,17 +139,17 @@ class UCParser:
     def p_assert_statement(self, p):
         """ assert_statement : ASSERT expression SEMI
         """
-        p[0] = ast_classes.Assert(p[1])
+        p[0] = ast_classes.Assert(p[2])
 
     def p_print_statement(self, p):
         """ print_statement : PRINT LPAREN expression_opt RPAREN SEMI
         """
-        p[0] = ast_classes.Print(p[2])
+        p[0] = ast_classes.Print(p[3])
 
     def p_read_statement(self, p):
         """ read_statement : READ LPAREN argument_expression RPAREN SEMI
         """
-        p[0] = ast_classes.Read(p[2])
+        p[0] = ast_classes.Read(p[3])
 
     def p_statement(self, p):
         """ statement   : expression_statement
