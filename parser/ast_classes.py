@@ -349,4 +349,50 @@ class Decl(Node):
         if self.init is not None: nodelist.append(("init", self.init))
         return tuple(nodelist)
 
+    def __iter__(self):
+        if self.type is not None:
+            yield self.type
+        if self.init is not None:
+            yield self.init
+
     attr_names = ('name',)
+
+class ArrayRef(Node):
+    __slots__ = ('name', 'subscript', 'coord')
+    def __init__(self, name, subscript, coord=None):
+        self.name = name
+        self.subscript = subscript
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.name is not None: nodelist.append(("name", self.name))
+        if self.subscript is not None: nodelist.append(("subscript", self.subscript))
+        return tuple(nodelist)
+
+    def __iter__(self):
+        if self.name is not None:
+            yield self.name
+        if self.subscript is not None:
+            yield self.subscript
+
+    attr_names = ()
+
+class GlobalDef(Node):
+    __slots__ = ('decls', 'coord')
+    def __init__(self, decls, coord=None):
+        self.decls = decls
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        for i,decl in enumerate(self.decls if self.decls is not None else []):
+            if self.decls is not None:
+                nodelist.append(("decls[%d]" % i, decl))
+        return tuple(nodelist)
+
+    def __iter__(self):
+        if self.decls is not None:
+            yield self.decls
+
+    attr_names = ()

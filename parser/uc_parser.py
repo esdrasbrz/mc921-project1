@@ -149,10 +149,10 @@ class UCParser:
         p[0] = [p[1]] if len(p) == 2 else p[1] + [p[2]]
 
     # This is not right, just a workaround to make the compiler work
-    def p_global_declaration(self, p):
+    def p_global_declaration_1(self, p):
         """ global_declaration : declaration
         """
-        p[0] = p[1]
+        p[0] = ast_classes.GlobalDef(p[1])
 
     def p_declaration(self, p):
         """ declaration : decl_body SEMI
@@ -181,7 +181,6 @@ class UCParser:
                 type_spec,
                 p[2]
             )
-        print(decls)
         p[0] = decls
 
     def p_declarator(self, p):
@@ -208,6 +207,22 @@ class UCParser:
                                         | empty
         """
         p[0] = p[1]
+
+    # def p_parameter_declaration(self, p):
+    #     """ parameter_list  : type_specifier declarator
+    #     """
+
+
+    # def p_parameter_list(self, p):
+    #     """ parameter_list  : parameter_declaration
+    #                         | parameter_list COMMA parameter_declaration
+    #     """
+    #     if len(p) == 2: # single parameter
+    #         p[0] = ast_classes.ParamList([p[1]], p[1].coord)
+    #     else:
+    #         p[1].params.append(p[3])
+    #         p[0] = p[1]
+
 
 
     def p_direct_declarator_1(self, p):
@@ -271,9 +286,13 @@ class UCParser:
     def p_postfix_expression_3(self, p):
         """ postfix_expression  : postfix_expression LPAREN RPAREN
                                 | postfix_expression LPAREN argument_expression RPAREN
-                                | postfix_expression LBRACKET expression RBRACKET
         """
         p[0] = ast_classes.FuncCall(p[1], p[3] if len(p) == 5 else None, p[1].coord)
+
+    def p_postfix_expression_4(self, p):
+        """ postfix_expression  : postfix_expression LBRACKET expression RBRACKET
+        """
+        p[0] = ast_classes.ArrayRef(p[1], p[3], p[1].coord)
 
     def p_argument_expression(self, p):
         """ argument_expression : assignment_expression
