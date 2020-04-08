@@ -70,8 +70,7 @@ class UCParser:
         p[0] = ast_classes.Break(self._token_coord(p, 1))
 
     def p_jump_statement_2(self, p):
-        """ jump_statement  : RETURN SEMI
-                            | RETURN LBRACES expression RBRACES SEMI
+        """ jump_statement  : RETURN expression_opt SEMI
         """
         p[0] = ast_classes.Return(p[2] if len(p) == 4 else None, self._token_coord(p, 1))
 
@@ -118,6 +117,17 @@ class UCParser:
         """
         p[0] = ast_classes.While(p[3], p[5], self._token_coord(p, 1))
 
+    def p_iteration_statement_2(self, p):
+        """ iteration_statement : FOR LPAREN expression_opt SEMI expression_opt SEMI expression_opt RPAREN statement
+        """
+        p[0] = ast_classes.For(p[3], p[5], p[7], p[9], self._token_coord(p, 1))
+
+    def p_iteration_statement_3(self, p):
+        """ iteration_statement : FOR LPAREN declaration expression_opt SEMI expression_opt RPAREN statement
+        """
+        p[0] = ast_classes.For(ast_classes.DeclList(p[3], self._token_coord(p, 1)),
+                         p[4], p[6], p[8], self._token_coord(p, 1))
+
     def p_postfix_expression_2(self, p):
         """ postfix_expression : postfix_expression PLUS_PLUS
                                | postfix_expression MINUS_MINUS
@@ -140,6 +150,16 @@ class UCParser:
         else:
             p[1].exprs.append(p[3])
             p[0] = p[1]
+
+    def p_empty(self, p):
+        """empty : """
+        pass
+
+    def p_expression_opt(self, p):
+        """ expression_opt : expression
+                           | empty
+
+        """
 
     def p_expression_1(self, p):
         """ expression  : assignment_expression
