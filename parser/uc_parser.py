@@ -92,7 +92,7 @@ class UCParser:
 
     # This is not right, just a workaround to make the compiler work
     def p_global_declaration(self, p):
-        """ global_declaration : declarator
+        """ global_declaration : direct_declarator
         """
         p[0] = p[1]
 
@@ -100,6 +100,27 @@ class UCParser:
         """ declarator : direct_declarator
         """
         p[0] = p[1]
+
+    # Returns a {decl=<declarator> : init=<initializer>} dictionary
+    # If there's no initializer, uses None
+    def p_init_declarator(self, p):
+        """ init_declarator : declarator
+                            | declarator ASSIGN initializer
+        """
+        p[0] = dict(decl=p[1], init=(p[3] if len(p) > 2 else None))
+
+    def p_init_declarator_list(self, p):
+        """ init_declarator_list    : init_declarator
+                                    | init_declarator_list COMMA init_declarator
+        """
+        p[0] = p[1] + [p[3]] if len(p) == 4 else [p[1]]
+
+    def p_init_declarator_list_opt(self, p):
+        """ init_declarator_list_opt    : init_declarator_list
+                                        | empty
+        """
+        p[0] = p[1]
+
 
     def p_direct_declarator_1(self, p):
         """ direct_declarator : identifier
