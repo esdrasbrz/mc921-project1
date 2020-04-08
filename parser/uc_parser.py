@@ -233,6 +233,14 @@ class UCParser:
         p[0] = ast_classes.For(ast_classes.DeclList(p[3], self._token_coord(p, 1)),
                          p[4], p[6], p[8], self._token_coord(p, 1))
 
+    def p_expression_statement(self, p):
+        """ expression_statement : expression_opt SEMI
+        """
+        if p[1] is None:
+            p[0] = ast_classes.EmptyStatement(self._token_coord(p, 2))
+        else:
+            p[0] = p[1]
+
     def p_postfix_expression_2(self, p):
         """ postfix_expression : postfix_expression PLUS_PLUS
                                | postfix_expression MINUS_MINUS

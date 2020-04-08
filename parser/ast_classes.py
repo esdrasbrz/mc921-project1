@@ -265,6 +265,18 @@ class For(Node):
 
     attr_names = ()
 
+
+class EmptyStatement(Node):
+    __slots__ = ("coord")
+
+    def __init__(self, coord=None):
+        self.coord = coord
+
+    def children(self):
+        return ()
+
+    attr_names = ()
+
 class Return(Node):
     __slots__ = ('expr', 'coord')
 
