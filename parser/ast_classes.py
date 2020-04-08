@@ -181,6 +181,48 @@ class Break(Node):
 
     attr_names = ()
 
+class Assert(Node):
+    __slots__ = ('expr', 'coord')
+
+    def __init__(self, expr, coord):
+        self.expr = expr
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.expr is not None: nodelist.append(("assert", self.expr))
+        return tuple(nodelist)
+
+    attr_names = ()
+
+class Print(Node):
+    __slots__ = ('expr', 'coord')
+
+    def __init__(self, expr, coord):
+        self.expr = expr
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.expr is not None: nodelist.append(("print", self.expr))
+        return tuple(nodelist)
+
+    attr_names = ()
+
+class Read(Node):
+    __slots__ = ('expr', 'coord')
+
+    def __init__(self, expr, coord):
+        self.expr = expr
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.expr is not None: nodelist.append(("read", self.expr))
+        return tuple(nodelist)
+
+    attr_names = ()
+
 class If(Node):
     __slots__ = ('cond', 'iftrue', 'iffalse', 'coord')
 
