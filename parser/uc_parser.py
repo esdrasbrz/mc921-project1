@@ -136,6 +136,33 @@ class UCParser:
         else:
             p[0] = p[1]
 
+    def p_assert_statement(self, p):
+        """ assert_statement : ASSERT expression SEMI
+        """
+        p[0] = ast_classes.Assert(p[1])
+
+    def p_print_statement(self, p):
+        """ print_statement : PRINT LPAREN expression_opt RPAREN SEMI
+        """
+        p[0] = ast_classes.Print(p[2])
+
+    def p_read_statement(self, p):
+        """ read_statement : READ LPAREN argument_expression RPAREN SEMI
+        """
+        p[0] = ast_classes.Read(p[2])
+
+    def p_statement(self, p):
+        """ statement   : expression_statement
+                        | compound_statement
+                        | selection_statement
+                        | iteration_statement
+                        | jump_statement
+                        | assert_statement
+                        | print_statement
+                        | read_statement
+        """
+        p[0] = p[1]
+
     def p_postfix_expression_2(self, p):
         """ postfix_expression : postfix_expression PLUS_PLUS
                                | postfix_expression MINUS_MINUS
@@ -166,8 +193,8 @@ class UCParser:
     def p_expression_opt(self, p):
         """ expression_opt : expression
                            | empty
-
         """
+        p[0] = p[1]
 
     def p_expression_1(self, p):
         """ expression  : assignment_expression
