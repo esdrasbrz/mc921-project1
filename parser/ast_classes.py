@@ -230,6 +230,41 @@ class Compound(Node):
 
     attr_names = ()
 
+class DeclList(Node):
+    __slots__ = ('decls', 'coord')
+
+    def __init__(self, decls, coord=None):
+        self.decls = decls
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        for i, child in enumerate(self.decls or []):
+            nodelist.append(("decls[%d]" % i, child))
+        return tuple(nodelist)
+
+    attr_names = ()
+
+class For(Node):
+    __slots__ = ("initial", "cond", "next", "statement", "coord")
+
+    def __init__(self, initial, cond, next, statement, coord=None):
+        self.initial = initial
+        self.cond = cond
+        self.next = next
+        self.statement = statement
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.initial is not None: nodelist.append(("initial", self.initial))
+        if self.cond is not None: nodelist.append(("cond", self.cond))
+        if self.next is not None: nodelist.append(("next", self.next))
+        if self.statement is not None: nodelist.append(("statement", self.statement))
+        return tuple(nodelist)
+
+    attr_names = ()
+
 class Return(Node):
     __slots__ = ('expr', 'coord')
 
