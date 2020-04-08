@@ -152,6 +152,10 @@ class Type(Node):
         nodelist = []
         return tuple(nodelist)
 
+    def __iter__(self):
+        return
+        yield
+
     attr_names = ('names', )
 
 class Assignment(Node):
@@ -214,6 +218,10 @@ class ID(Node):
     def children(self):
         nodelist = []
         return tuple(nodelist)
+
+    def __iter__(self):
+        return
+        yield
 
     attr_names = ('name', )
 
@@ -326,3 +334,19 @@ class FuncDecl(Node):
         return tuple(nodelist)
 
     attr_names = ()
+
+class Decl(Node):
+    __slots__ = ('name', 'type', 'init', 'coord')
+    def __init__(self, name, type, init, coord=None):
+        self.name = name
+        self.type = type
+        self.init = init
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.type is not None: nodelist.append(("type", self.type))
+        if self.init is not None: nodelist.append(("init", self.init))
+        return tuple(nodelist)
+
+    attr_names = ('name',)

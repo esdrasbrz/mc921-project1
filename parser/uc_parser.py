@@ -7,6 +7,7 @@ from .lex.uc_lexer import UCLexer
 def print_error(msg, x, y):
     print("Lexical error: %s at %d:%d" % (msg, x, y))
 
+class ParseError(Exception): pass
 
 class UCParser:
     tokens = UCLexer.tokens
@@ -55,6 +56,63 @@ class UCParser:
             return decl
 
 
+    def _fix_decl_name_type(self, decl, typename):
+        """ Fixes a declaration. Modifies decl.
+        """
+        # Reach the underlying basic type
+        type = decl
+        while not isinstance(type, ast_classes.VarDecl):
+            type = type.type
+
+        decl.name = type.declname
+
+        # The typename is a list of types. If any type in this
+        # list isn't an Type, it must be the only
+        # type in the list.
+        # If all the types are basic, they're collected in the
+        # Type holder.
+        for tn in typename:
+            if not isinstance(tn, ast_classes.Type):
+                if len(typename) > 1:
+                    self._parse_error(
+                        "Invalid multiple types specified", tn.coord)
+                else:
+                    type.type = tn
+                    return decl
+
+        if not typename:
+            # Functions default to returning int
+            if not isinstance(decl.type, ast_classes.FuncDecl):
+                self._parse_error("Missing type in declaration", decl.coord)
+            type.type = ast_classes.Type(['int'], coord=decl.coord)
+        else:
+            # At this point, we know that typename is a list of Type
+            # nodes. Concatenate all the names into a single list.
+            type.type = ast_classes.Type(
+                [typename.names[0]],
+                coord=typename.coord)
+        return decl
+
+    def _build_declarations(self, spec, decls):
+        """ Builds a list of declarations all sharing the given specifiers.
+        """
+        declarations = []
+
+        for decl in decls:
+            assert decl['decl'] is not None
+            declaration = ast_classes.Decl(
+                    name=None,
+                    type=decl['decl'],
+                    init=decl.get('init'),
+                    coord=decl['decl'].coord)
+
+            fixed_decl = self._fix_decl_name_type(declaration, spec)
+            declarations.append(fixed_decl)
+
+        return declarations
+
+    def _parse_error(self, msg, coord):
+        raise Exception("{}: {}".format(coord, msg))
 
     def parse(self, text, filename='', debug=False):
         """ Parses uC code and returns an AST.
@@ -92,9 +150,39 @@ class UCParser:
 
     # This is not right, just a workaround to make the compiler work
     def p_global_declaration(self, p):
-        """ global_declaration : direct_declarator
+        """ global_declaration : declaration
         """
         p[0] = p[1]
+
+    def p_declaration(self, p):
+        """ declaration : decl_body SEMI
+        """
+        p[0] = p[1]
+
+    def p_declaration_list(self, p):
+        """ declaration_list    : declaration
+                                | declaration_list declaration
+        """
+        p[0] = p[1] if len(p) == 2 else p[1] + p[2]
+
+    def p_declaration_list_opt(self, p):
+        """ declaration_list_opt    : declaration_list
+                                    | empty
+        """
+        p[0] = p[1]
+
+    def p_decl_body(self, p):
+        """ decl_body : type_specifier init_declarator_list_opt
+        """
+        type_spec = p[1]
+        decls = None
+        if p[2] is not None:
+            decls = self._build_declarations(
+                type_spec,
+                p[2]
+            )
+        print(decls)
+        p[0] = decls
 
     def p_declarator(self, p):
         """ declarator : direct_declarator
