@@ -246,7 +246,7 @@ class If(Node):
     attr_names = ()
 
 class FuncDef(Node):
-    __slots__ = ('decl', 'param_decls', 'body', 'coord', '__weakref__')
+    __slots__ = ('decl', 'param_decls', 'body', 'coord')
     def __init__(self, decl, param_decls, body, coord=None):
         self.decl = decl
         self.param_decls = param_decls

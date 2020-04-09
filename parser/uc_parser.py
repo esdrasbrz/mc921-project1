@@ -151,11 +151,15 @@ class UCParser:
 
     # This is not right, just a workaround to make the compiler work
     def p_global_declaration_1(self, p):
-        """ global_declaration  : function_definition
-                                | declaration
+        """ global_declaration  : declaration
         """
         p[0] = ast_classes.GlobalDef(p[1])
-        # p[0] = p[1]
+
+    def p_global_declaration_2(self, p):
+        """ global_declaration  : function_definition
+        """
+        p[0] = p[1]
+
     def p_declaration(self, p):
         """ declaration : decl_body SEMI
         """
@@ -607,7 +611,7 @@ class UCParser:
         """ function_definition : type_specifier declarator declaration_list_opt compound_statement
         """
         spec = p[1]
-        declaration = self._build_declarations(spec, [dict(decl=p[2], init=None)])[0]
+        declaration = self._build_declarations(spec, [dict(decl=p[2])])[0]
 
         p[0] = ast_classes.FuncDef(declaration, p[3], p[4])
 
