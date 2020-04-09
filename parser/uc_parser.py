@@ -8,6 +8,10 @@ def print_error(msg, x, y):
     print("Lexical error: %s at %d:%d" % (msg, x, y))
 
 
+class ParseError(Exception):
+    pass
+
+
 class UCParser:
     tokens = UCLexer.tokens
 
@@ -23,7 +27,6 @@ class UCParser:
             last_cr = -1
         column = (p.lexpos(token_idx) - (last_cr))
         return ast_classes.Coord(p.lineno(token_idx), column)
-
 
     def _type_modify_decl(self, decl, modifier):
         """ Tacks a type modifier on a declarator, and returns
@@ -54,7 +57,63 @@ class UCParser:
             decl_tail.type = modifier_head
             return decl
 
+    def _fix_decl_name_type(self, decl, typename):
+        """ Fixes a declaration. Modifies decl.
+        """
+        # Reach the underlying basic type
+        type = decl
+        while not isinstance(type, ast_classes.VarDecl):
+            type = type.type
 
+        decl.name = type.declname
+
+        # The typename is a list of types. If any type in this
+        # list isn't an Type, it must be the only
+        # type in the list.
+        # If all the types are basic, they're collected in the
+        # Type holder.
+        for tn in typename:
+            if not isinstance(tn, ast_classes.Type):
+                if len(typename) > 1:
+                    self._parse_error(
+                        "Invalid multiple types specified", tn.coord)
+                else:
+                    type.type = tn
+                    return decl
+
+        if not typename:
+            # Functions default to returning int
+            if not isinstance(decl.type, ast_classes.FuncDecl):
+                self._parse_error("Missing type in declaration", decl.coord)
+            type.type = ast_classes.Type(['int'], coord=decl.coord)
+        else:
+            # At this point, we know that typename is a list of Type
+            # nodes. Concatenate all the names into a single list.
+            type.type = ast_classes.Type(
+                [typename.names[0]],
+                coord=typename.coord)
+        return decl
+
+    def _build_declarations(self, spec, decls):
+        """ Builds a list of declarations all sharing the given specifiers.
+        """
+        declarations = []
+
+        for decl in decls:
+            assert decl['decl'] is not None
+            declaration = ast_classes.Decl(
+                name=None,
+                type=decl['decl'],
+                init=decl.get('init'),
+                coord=decl['decl'].coord)
+
+            fixed_decl = self._fix_decl_name_type(declaration, spec)
+            declarations.append(fixed_decl)
+
+        return declarations
+
+    def _parse_error(self, msg, coord):
+        raise Exception("{}: {}".format(coord, msg))
 
     def parse(self, text, filename='', debug=False):
         """ Parses uC code and returns an AST.
@@ -65,9 +124,9 @@ class UCParser:
                 error messages)
         """
         return self.parser.parse(
-                input=text,
-                lexer=self.lexer,
-                debug=debug)
+            input=text,
+            lexer=self.lexer,
+            debug=debug)
 
     precedence = (
         ('left', 'OR'),
@@ -76,12 +135,12 @@ class UCParser:
         ('left', 'BIGGER', 'BIGGER_EQUAL', 'SMALLER', 'SMALLER_EQUAL'),
         ('left', 'PLUS', 'MINUS'),
         ('left', 'TIMES', 'DIVIDE', 'MOD')
-        )
+    )
 
     def p_program(self, p):
         """ program  : global_declaration_list
         """
-        coord = self._token_coord(p,1)
+        coord = self._token_coord(p, 1)
         p[0] = ast_classes.Program(p[1], coord)
 
     def p_global_declaration_list(self, p):
@@ -91,15 +150,64 @@ class UCParser:
         p[0] = [p[1]] if len(p) == 2 else p[1] + [p[2]]
 
     # This is not right, just a workaround to make the compiler work
-    def p_global_declaration(self, p):
-        """ global_declaration : direct_declarator
+    def p_global_declaration_1(self, p):
+        """ global_declaration : declaration
+        """
+        p[0] = ast_classes.GlobalDef(p[1])
+
+    def p_declaration(self, p):
+        """ declaration : decl_body SEMI
         """
         p[0] = p[1]
+
+    def p_declaration_list(self, p):
+        """ declaration_list    : declaration
+                                | declaration_list declaration
+        """
+        p[0] = p[1] if len(p) == 2 else p[1] + p[2]
+
+    def p_declaration_list_opt(self, p):
+        """ declaration_list_opt    : declaration_list
+                                    | empty
+        """
+        p[0] = p[1]
+
+    def p_decl_body(self, p):
+        """ decl_body : type_specifier init_declarator_list_opt
+        """
+        type_spec = p[1]
+        decls = None
+        if p[2] is not None:
+            decls = self._build_declarations(
+                type_spec,
+                p[2]
+            )
+        p[0] = decls
+
+    def p_pointer(self, p):
+        """ pointer : TIMES
+                    | TIMES pointer
+        """
+        coord = self._token_coord(p, 1)
+        nested_type = ast_classes.PtrDecl(type=None, coord=coord)
+        if len(p) > 2:
+            tail_type = p[2]
+            while tail_type.type is not None:
+                tail_type = tail_type.type
+            tail_type.type = nested_type
+            p[0] = p[2]
+        else:
+            p[0] = nested_type
 
     def p_declarator(self, p):
         """ declarator : direct_declarator
         """
         p[0] = p[1]
+
+    def p_declarator_2(self, p):
+        """ declarator : pointer direct_declarator
+        """
+        p[0] = self._type_modify_decl(p[2], p[1])
 
     # Returns a {decl=<declarator> : init=<initializer>} dictionary
     # If there's no initializer, uses None
@@ -121,6 +229,24 @@ class UCParser:
         """
         p[0] = p[1]
 
+    def p_parameter_declaration(self, p):
+        """ parameter_declaration  : type_specifier declarator
+        """
+        # Returns Decls
+        p[0] = self._build_declarations(
+            p[1],
+            [dict(decl=p[2])])[0]
+
+    def p_parameter_list(self, p):
+        """ parameter_list  : parameter_declaration
+                            | parameter_list COMMA parameter_declaration
+        """
+        if len(p) == 2:  # single parameter
+            p[0] = ast_classes.ParamList([p[1]], p[1].coord)
+        else:
+            p[1].params.append(p[3])
+            p[0] = p[1]
+
 
     def p_direct_declarator_1(self, p):
         """ direct_declarator : identifier
@@ -135,14 +261,15 @@ class UCParser:
     def p_direct_declarator_3(self, p):
         """ direct_declarator : direct_declarator LBRACKET constant_expression_opt RBRACKET
         """
-        array = ast_classes.ArrayDecl(None, p[3] if len(p) > 4 else None, p[1].coord)
+        array = ast_classes.ArrayDecl(
+            None, p[3] if len(p) > 4 else None, p[1].coord)
         p[0] = self._type_modify_decl(p[1], array)
-
 
     def p_direct_declarator_4(self, p):
         """ direct_declarator : direct_declarator LPAREN identifier_list RPAREN
+                              | direct_declarator LPAREN parameter_list RPAREN
         """
-        func = ast_classes.FuncDecl(p[3],None, p[1].coord)
+        func = ast_classes.FuncDecl(p[3], None, p[1].coord)
         p[0] = self._type_modify_decl(p[1], func)
 
     def p_initializer_1(self, p):
@@ -163,7 +290,7 @@ class UCParser:
         """ initializer_list : initializer
                              | initializer_list COMMA initializer
         """
-        if len(p) == 2: # single initializer
+        if len(p) == 2:  # single initializer
             p[0] = ast_classes.InitList([p[1]], p[1].coord)
         else:
             p[1].exprs.append(p[3])
@@ -183,15 +310,20 @@ class UCParser:
     def p_postfix_expression_3(self, p):
         """ postfix_expression  : postfix_expression LPAREN RPAREN
                                 | postfix_expression LPAREN argument_expression RPAREN
-                                | postfix_expression LBRACKET expression RBRACKET
         """
-        p[0] = ast_classes.FuncCall(p[1], p[3] if len(p) == 5 else None, p[1].coord)
+        p[0] = ast_classes.FuncCall(
+            p[1], p[3] if len(p) == 5 else None, p[1].coord)
+
+    def p_postfix_expression_4(self, p):
+        """ postfix_expression  : postfix_expression LBRACKET expression RBRACKET
+        """
+        p[0] = ast_classes.ArrayRef(p[1], p[3], p[1].coord)
 
     def p_argument_expression(self, p):
         """ argument_expression : assignment_expression
                                 | argument_expression COMMA assignment_expression
         """
-        if len(p) == 2: # single expr
+        if len(p) == 2:  # single expr
             p[0] = ast_classes.ExprList([p[1]], p[1].coord)
         else:
             p[1].exprs.append(p[3])
@@ -209,7 +341,6 @@ class UCParser:
             p[1] = ast_classes.ExprList(p[1], p[1].coord)
         p[1].exprs.append(p[3])
         p[0] = p[1]
-
 
     def p_primary_expression_1(self, p):
         """ primary_expression : identifier
@@ -298,14 +429,14 @@ class UCParser:
     def p_identifier(self, p):
         """ identifier : ID
         """
-        coord = self._token_coord(p,1)
+        coord = self._token_coord(p, 1)
         p[0] = ast_classes.ID(p[1], coord)
 
     def p_identifier_list(self, p):
         """ identifier_list : identifier
                             | identifier_list COMMA identifier
         """
-        if len(p) == 2: # single parameter
+        if len(p) == 2:  # single parameter
             p[0] = ast_classes.ParamList([p[1]], p[1].coord)
         else:
             p[1].params.append(p[3])
@@ -326,32 +457,32 @@ class UCParser:
                            | INT
                            | FLOAT
         """
-        coord = self._token_coord(p,1)
+        coord = self._token_coord(p, 1)
         p[0] = ast_classes.Type([p[1]], coord)
 
     def p_constant_1(self, p):
         """ constant : INT_CONST
         """
-        coord = self._token_coord(p,1)
+        coord = self._token_coord(p, 1)
         p[0] = ast_classes.Constant('int', p[1], coord)
 
     def p_constant_2(self, p):
         """ constant : FLOAT_CONST
         """
-        coord = self._token_coord(p,1)
+        coord = self._token_coord(p, 1)
         p[0] = ast_classes.Constant('float', p[1], coord)
 
     def p_constant_3(self, p):
         """ constant : STRING_CONST
         """
-        coord = self._token_coord(p,1)
+        coord = self._token_coord(p, 1)
         p[0] = ast_classes.Constant('string', p[1], coord)
 
     def p_empty(self, p):
         """ empty :"""
         pass
 
-    def p_error (self, p):
+    def p_error(self, p):
         if p:
             print("Error near the symbol %s" % p.value)
         else:

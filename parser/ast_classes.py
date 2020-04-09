@@ -152,6 +152,10 @@ class Type(Node):
         nodelist = []
         return tuple(nodelist)
 
+    def __iter__(self):
+        return
+        yield
+
     attr_names = ('names', )
 
 class Assignment(Node):
@@ -377,6 +381,10 @@ class ID(Node):
         nodelist = []
         return tuple(nodelist)
 
+    def __iter__(self):
+        return
+        yield
+
     attr_names = ('name', )
 
 
@@ -486,5 +494,84 @@ class FuncDecl(Node):
         if self.args is not None: nodelist.append(("args", self.args))
         if self.type is not None: nodelist.append(("type", self.type))
         return tuple(nodelist)
+
+    attr_names = ()
+
+class Decl(Node):
+    __slots__ = ('name', 'type', 'init', 'coord')
+    def __init__(self, name, type, init, coord=None):
+        self.name = name
+        self.type = type
+        self.init = init
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.type is not None: nodelist.append(("type", self.type))
+        if self.init is not None: nodelist.append(("init", self.init))
+        return tuple(nodelist)
+
+    def __iter__(self):
+        if self.type is not None:
+            yield self.type
+        if self.init is not None:
+            yield self.init
+
+    attr_names = ('name',)
+
+class ArrayRef(Node):
+    __slots__ = ('name', 'subscript', 'coord')
+    def __init__(self, name, subscript, coord=None):
+        self.name = name
+        self.subscript = subscript
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.name is not None: nodelist.append(("name", self.name))
+        if self.subscript is not None: nodelist.append(("subscript", self.subscript))
+        return tuple(nodelist)
+
+    def __iter__(self):
+        if self.name is not None:
+            yield self.name
+        if self.subscript is not None:
+            yield self.subscript
+
+    attr_names = ()
+
+class GlobalDef(Node):
+    __slots__ = ('decls', 'coord')
+    def __init__(self, decls, coord=None):
+        self.decls = decls
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        for i,decl in enumerate(self.decls if self.decls is not None else []):
+            if self.decls is not None:
+                nodelist.append(("decls[%d]" % i, decl))
+        return tuple(nodelist)
+
+    def __iter__(self):
+        if self.decls is not None:
+            yield self.decls
+
+    attr_names = ()
+
+class PtrDecl(Node):
+    __slots__ = ('type', 'coord')
+    def __init__(self, type, coord=None):
+        self.type = type
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.type is not None: nodelist.append(("type", self.type))
+        return tuple(nodelist)
+
+    def __iter__(self):
+        if self.type is not None:
+            yield self.type
 
     attr_names = ()
