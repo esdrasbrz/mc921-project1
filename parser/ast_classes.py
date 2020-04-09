@@ -238,7 +238,6 @@ class If(Node):
 
     def children(self):
         nodelist = []
-        print('aquiii')
         if self.cond is not None: nodelist.append(("cond", self.cond))
         if self.iftrue is not None: nodelist.append(("iftrue", self.iftrue))
         if self.iffalse is not None: nodelist.append(("iffalse", self.iffalse))
