@@ -179,19 +179,15 @@ class UCParser:
 
     def p_decl_body(self, p):
         """ decl_body  : type_specifier init_declarator_list_opt
-                       | empty
         """
-        if p[1] is not None:
-            type_spec = p[1]
-            decls = None
-            if p[2] is not None:
-                decls = self._build_declarations(
-                    type_spec,
-                    p[2]
-                )
-            p[0] = decls
-        else:
-            p[0] = p[1]
+        type_spec = p[1]
+        decls = None
+        if p[2] is not None:
+            decls = self._build_declarations(
+                type_spec,
+                p[2]
+            )
+        p[0] = decls
 
     def p_pointer(self, p):
         """ pointer : TIMES
