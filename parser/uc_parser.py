@@ -601,6 +601,7 @@ class UCParser:
         """
         p[0] = p[1]
 
+    # adiciona o commit 27 a branch
 
     def p_function_definition_1(self, p):
         """ function_definition : type_specifier declarator declaration_list_opt compound_statement
@@ -614,8 +615,6 @@ class UCParser:
         """ function_definition : declarator declaration_list_opt compound_statement
         """
         spec = dict(
-            qual=[],
-            storage=[],
             type=[ast_classes.Type(['int'],
                                        coord=self._token_coord(p, 1))],
             function=[])
