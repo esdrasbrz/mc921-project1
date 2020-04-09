@@ -106,11 +106,24 @@ class UCParser:
                 type=decl['decl'],
                 init=decl.get('init'),
                 coord=decl['decl'].coord)
-
             fixed_decl = self._fix_decl_name_type(declaration, spec)
             declarations.append(fixed_decl)
 
         return declarations
+
+    def _build_function_definition(self, spec, decl, param_decls, body):
+        """ Builds a function definition.
+        """
+        declaration = self._build_declarations(
+            spec=spec,
+            decls=[dict(decl=decl, init=None)],
+        )[0]
+
+        return ast_classes.FuncDef(
+            declaration,
+            param_decls,
+            body,
+            decl.coord)
 
     def _parse_error(self, msg, coord):
         raise Exception("{}: {}".format(coord, msg))
@@ -428,7 +441,7 @@ class UCParser:
         p[0] = p[1]
 
     def p_constant_expression_opt(self, p):
-        """ constant_expression_opt : binary_expression
+        """ constant_expression_opt : constant_expression
                                     | empty
         """
         p[0] = p[1]
@@ -443,12 +456,7 @@ class UCParser:
         """ identifier_list_opt : identifier_list
                                 | empty
         """
-        if len(p) == 2 and p[1] is not None:  # single parameter
-            p[0] = ast_classes.ParamList([p[1]], p[1].coord)
-        else:
-            if p[1] is not None:
-                p[1].params.append(p[3])
-            p[0] = p[1]
+        p[0] = p[1]
 
     def p_identifier_list(self, p):
         """ identifier_list : identifier
@@ -601,26 +609,19 @@ class UCParser:
         """
         p[0] = p[1]
 
-    # adiciona o commit 27 a branch
-
     def p_function_definition_1(self, p):
         """ function_definition : type_specifier declarator declaration_list_opt compound_statement
         """
         spec = p[1]
-        declaration = self._build_declarations(spec, [dict(decl=p[2])])[0]
 
-        p[0] = ast_classes.FuncDef(declaration, p[3], p[4])
+        p[0] = self._build_function_definition(spec, p[2], p[3], p[4])
 
     def p_function_definition_2(self, p):
         """ function_definition : declarator declaration_list_opt compound_statement
         """
         spec = dict(
-            type=[ast_classes.Type(['int'],
-                                       coord=self._token_coord(p, 1))],
+            type=[ast_classes.Type(['void'],
+            coord=self._token_coord(p, 1))],
             function=[])
 
-        p[0] = ast_classes.FuncDef(
-            spec=spec,
-            decl=p[1],
-            param_decls=p[2],
-            body=p[3])
+        p[0] = self._build_function_definition(spec, p[1], p[2], p[3])
