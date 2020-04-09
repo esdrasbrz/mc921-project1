@@ -188,7 +188,7 @@ class Break(Node):
 class Assert(Node):
     __slots__ = ('expr', 'coord')
 
-    def __init__(self, expr, coord):
+    def __init__(self, expr, coord=None):
         self.expr = expr
         self.coord = coord
 
@@ -202,7 +202,7 @@ class Assert(Node):
 class Print(Node):
     __slots__ = ('expr', 'coord')
 
-    def __init__(self, expr, coord):
+    def __init__(self, expr, coord=None):
         self.expr = expr
         self.coord = coord
 
@@ -216,7 +216,7 @@ class Print(Node):
 class Read(Node):
     __slots__ = ('expr', 'coord')
 
-    def __init__(self, expr, coord):
+    def __init__(self, expr, coord=None):
         self.expr = expr
         self.coord = coord
 

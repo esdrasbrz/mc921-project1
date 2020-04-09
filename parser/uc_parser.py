@@ -151,10 +151,11 @@ class UCParser:
 
     # This is not right, just a workaround to make the compiler work
     def p_global_declaration_1(self, p):
-        """ global_declaration : declaration
+        """ global_declaration  : function_definition
+                                | declaration
         """
         p[0] = ast_classes.GlobalDef(p[1])
-
+        # p[0] = p[1]
     def p_declaration(self, p):
         """ declaration : decl_body SEMI
         """
@@ -173,16 +174,20 @@ class UCParser:
         p[0] = p[1]
 
     def p_decl_body(self, p):
-        """ decl_body : type_specifier init_declarator_list_opt
+        """ decl_body  : type_specifier init_declarator_list_opt
+                       | empty
         """
-        type_spec = p[1]
-        decls = None
-        if p[2] is not None:
-            decls = self._build_declarations(
-                type_spec,
-                p[2]
-            )
-        p[0] = decls
+        if p[1] is not None:
+            type_spec = p[1]
+            decls = None
+            if p[2] is not None:
+                decls = self._build_declarations(
+                    type_spec,
+                    p[2]
+                )
+            p[0] = decls
+        else:
+            p[0] = p[1]
 
     def p_pointer(self, p):
         """ pointer : TIMES
@@ -200,7 +205,7 @@ class UCParser:
             p[0] = nested_type
 
     def p_declarator(self, p):
-        """ declarator : direct_declarator
+        """ declarator  : direct_declarator
         """
         p[0] = p[1]
 
@@ -266,11 +271,13 @@ class UCParser:
         p[0] = self._type_modify_decl(p[1], array)
 
     def p_direct_declarator_4(self, p):
-        """ direct_declarator : direct_declarator LPAREN identifier_list RPAREN
+        """ direct_declarator : direct_declarator LPAREN identifier_list_opt RPAREN
                               | direct_declarator LPAREN parameter_list RPAREN
         """
         func = ast_classes.FuncDecl(p[3], None, p[1].coord)
         p[0] = self._type_modify_decl(p[1], func)
+
+
 
     def p_initializer_1(self, p):
         """ initializer : assignment_expression
@@ -432,6 +439,18 @@ class UCParser:
         coord = self._token_coord(p, 1)
         p[0] = ast_classes.ID(p[1], coord)
 
+    def p_identifier_list_opt(self, p):
+        """ identifier_list_opt : identifier
+                            | identifier_list COMMA identifier
+                            | empty
+        """
+        if len(p) == 2 and p[1] is not None:  # single parameter
+            p[0] = ast_classes.ParamList([p[1]], p[1].coord)
+        else:
+            if p[1] is not None:
+                p[1].params.append(p[3])
+            p[0] = p[1]
+
     def p_identifier_list(self, p):
         """ identifier_list : identifier
                             | identifier_list COMMA identifier
@@ -479,7 +498,8 @@ class UCParser:
         p[0] = ast_classes.Constant('string', p[1], coord)
 
     def p_empty(self, p):
-        """ empty :"""
+        """ empty :
+        """
         pass
 
     def p_error(self, p):
@@ -511,7 +531,7 @@ class UCParser:
         p[0] = p[1] if len(p) == 2 or p[2] == [None] else p[1] + p[2]
 
     def p_compound_statement(self, p):
-        """compound_statement   : LBRACES block_item_list RBRACES
+        """ compound_statement   : LBRACES block_item_list RBRACES
         """
         p[0] = ast_classes.Compound(block_items=p[2], coord=self._token_coord(p, 1))
 
@@ -567,6 +587,7 @@ class UCParser:
     def p_statement(self, p):
         """ statement   : expression_statement
                         | selection_statement
+                        | compound_statement
                         | iteration_statement
                         | jump_statement
                         | assert_statement
@@ -581,22 +602,17 @@ class UCParser:
         """
         p[0] = p[1]
 
-    def _build_func_def(self, spec, decl, param_decls, body):
-        declaration = self._build_declarations(spec, [dict(decl=decl, init=None)])[0]
-
-        return
-
 
     def p_function_definition_1(self, p):
-        """ function_definition : type_specifier declarator declaration_list compound_statement
+        """ function_definition : type_specifier declarator declaration_list_opt compound_statement
         """
         spec = p[1]
         declaration = self._build_declarations(spec, [dict(decl=p[2], init=None)])[0]
 
         p[0] = ast_classes.FuncDef(declaration, p[3], p[4])
 
-    def p_function_definition_1(self, p):
-        """ function_definition : declarator declaration_list compound_statement
+    def p_function_definition_2(self, p):
+        """ function_definition : declarator declaration_list_opt compound_statement
         """
         spec = dict(
             qual=[],
@@ -604,8 +620,6 @@ class UCParser:
             type=[ast_classes.Type(['int'],
                                        coord=self._token_coord(p, 1))],
             function=[])
-
-        declaration = self._build_declarations(spec, [dict(decl=p[2], init=None)])[0]
 
         p[0] = ast_classes.FuncDef(
             spec=spec,
