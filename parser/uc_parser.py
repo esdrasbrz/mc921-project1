@@ -440,9 +440,8 @@ class UCParser:
         p[0] = ast_classes.ID(p[1], coord)
 
     def p_identifier_list_opt(self, p):
-        """ identifier_list_opt : identifier
-                            | identifier_list COMMA identifier
-                            | empty
+        """ identifier_list_opt : identifier_list
+                                | empty
         """
         if len(p) == 2 and p[1] is not None:  # single parameter
             p[0] = ast_classes.ParamList([p[1]], p[1].coord)
