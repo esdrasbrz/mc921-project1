@@ -1,1 +1,2 @@
-int x(int y, float z);
+int y(int z, float w);
+int* x;

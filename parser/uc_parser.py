@@ -184,10 +184,30 @@ class UCParser:
             )
         p[0] = decls
 
+    def p_pointer(self, p):
+        """ pointer : TIMES
+                    | TIMES pointer
+        """
+        coord = self._token_coord(p, 1)
+        nested_type = ast_classes.PtrDecl(type=None, coord=coord)
+        if len(p) > 2:
+            tail_type = p[2]
+            while tail_type.type is not None:
+                tail_type = tail_type.type
+            tail_type.type = nested_type
+            p[0] = p[2]
+        else:
+            p[0] = nested_type
+
     def p_declarator(self, p):
         """ declarator : direct_declarator
         """
         p[0] = p[1]
+
+    def p_declarator_2(self, p):
+        """ declarator : pointer direct_declarator
+        """
+        p[0] = self._type_modify_decl(p[2], p[1])
 
     # Returns a {decl=<declarator> : init=<initializer>} dictionary
     # If there's no initializer, uses None

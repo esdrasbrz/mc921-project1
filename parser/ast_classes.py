@@ -396,3 +396,20 @@ class GlobalDef(Node):
             yield self.decls
 
     attr_names = ()
+
+class PtrDecl(Node):
+    __slots__ = ('type', 'coord')
+    def __init__(self, type, coord=None):
+        self.type = type
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.type is not None: nodelist.append(("type", self.type))
+        return tuple(nodelist)
+
+    def __iter__(self):
+        if self.type is not None:
+            yield self.type
+
+    attr_names = ()
