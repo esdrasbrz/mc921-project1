@@ -580,3 +580,35 @@ class UCParser:
                            | empty
         """
         p[0] = p[1]
+
+    def _build_func_def(self, spec, decl, param_decls, body):
+        declaration = self._build_declarations(spec, [dict(decl=decl, init=None)])[0]
+
+        return
+
+
+    def p_function_definition_1(self, p):
+        """ function_definition : type_specifier declarator declaration_list compound_statement
+        """
+        spec = p[1]
+        declaration = self._build_declarations(spec, [dict(decl=p[2], init=None)])[0]
+
+        p[0] = ast_classes.FuncDef(declaration, p[3], p[4])
+
+    def p_function_definition_1(self, p):
+        """ function_definition : declarator declaration_list compound_statement
+        """
+        spec = dict(
+            qual=[],
+            storage=[],
+            type=[ast_classes.Type(['int'],
+                                       coord=self._token_coord(p, 1))],
+            function=[])
+
+        declaration = self._build_declarations(spec, [dict(decl=p[2], init=None)])[0]
+
+        p[0] = ast_classes.FuncDef(
+            spec=spec,
+            decl=p[1],
+            param_decls=p[2],
+            body=p[3])
