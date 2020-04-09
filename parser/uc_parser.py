@@ -169,102 +169,8 @@ class UCParser:
             p[1].exprs.append(p[3])
             p[0] = p[1]
 
-    def p_jump_statement_1(self, p):
-        """ jump_statement  : BREAK SEMI
-        """
-        p[0] = ast_classes.Break(self._token_coord(p, 1))
-
-    def p_jump_statement_2(self, p):
-        """ jump_statement  : RETURN expression_opt SEMI
-        """
-        p[0] = ast_classes.Return(p[2] if len(p) == 4 else None, self._token_coord(p, 1))
-
     def p_postfix_expression_1(self, p):
         """ postfix_expression : primary_expression
-        """
-        p[0] = p[1]
-
-    def p_block_item(self, p):
-        """ block_item  : declaration
-                        | statement
-        """
-        if isinstance(p[1], list):
-            p[0] = p[1]
-        else:
-            p[0] = [p[1]]
-
-    def p_block_item_list(self, p):
-        """ block_item_list : block_item
-                            | block_item_list block_item
-        """
-        if len(p) == 2 or p[2] == [None]:
-            p[0] = p[1]
-        else:
-            p[0] = p[1] + p[2]
-
-    def p_compound_statement(self, p):
-        """compound_statement   : LBRACES block_item_list RBRACES
-        """
-        p[0] = ast_classes.Compound(block_items=p[2], coord=self._token_coord(p, 1))
-
-    def p_selection_statement_1(self, p):
-        """ selection_statement : IF LPAREN expression RPAREN statement
-        """
-        p[0] = ast_classes.If(p[3], p[5], None, self._token_coord(p, 1))
-
-    def p_selection_statement_2(self, p):
-        """ selection_statement : IF LPAREN expression RPAREN statement ELSE statement
-        """
-        p[0] = ast_classes.If(p[3], p[5], p[7], self._token_coord(p, 1))
-
-    def p_iteration_statement_1(self, p):
-        """ iteration_statement : WHILE LPAREN expression RPAREN statement
-        """
-        p[0] = ast_classes.While(p[3], p[5], self._token_coord(p, 1))
-
-    def p_iteration_statement_2(self, p):
-        """ iteration_statement : FOR LPAREN expression_opt SEMI expression_opt SEMI expression_opt RPAREN statement
-        """
-        p[0] = ast_classes.For(p[3], p[5], p[7], p[9], self._token_coord(p, 1))
-
-    def p_iteration_statement_3(self, p):
-        """ iteration_statement : FOR LPAREN declaration expression_opt SEMI expression_opt RPAREN statement
-        """
-        p[0] = ast_classes.For(ast_classes.DeclList(p[3], self._token_coord(p, 1)),
-                         p[4], p[6], p[8], self._token_coord(p, 1))
-
-    def p_expression_statement(self, p):
-        """ expression_statement : expression_opt SEMI
-        """
-        if p[1] is None:
-            p[0] = ast_classes.EmptyStatement(self._token_coord(p, 2))
-        else:
-            p[0] = p[1]
-
-    def p_assert_statement(self, p):
-        """ assert_statement : ASSERT expression SEMI
-        """
-        p[0] = ast_classes.Assert(p[2])
-
-    def p_print_statement(self, p):
-        """ print_statement : PRINT LPAREN expression_opt RPAREN SEMI
-        """
-        p[0] = ast_classes.Print(p[3])
-
-    def p_read_statement(self, p):
-        """ read_statement : READ LPAREN argument_expression RPAREN SEMI
-        """
-        p[0] = ast_classes.Read(p[3])
-
-    def p_statement(self, p):
-        """ statement   : expression_statement
-                        | compound_statement
-                        | selection_statement
-                        | iteration_statement
-                        | jump_statement
-                        | assert_statement
-                        | print_statement
-                        | read_statement
         """
         p[0] = p[1]
 
@@ -290,16 +196,6 @@ class UCParser:
         else:
             p[1].exprs.append(p[3])
             p[0] = p[1]
-
-    def p_empty(self, p):
-        """empty : """
-        pass
-
-    def p_expression_opt(self, p):
-        """ expression_opt : expression
-                           | empty
-        """
-        p[0] = p[1]
 
     def p_expression_1(self, p):
         """ expression  : assignment_expression
@@ -454,34 +350,102 @@ class UCParser:
     def p_empty(self, p):
         """ empty :"""
         pass
-    def p_declarator(self, p):
-        """ declarator  : direct_declarator
-        """
-        p[0] = p[1]
-
-    def p_direct_declarator_1(self, p):
-        """ direct_declarator   : identifier
-        """
-        p[0] = p[1]
-
-    def p_direct_declarator_2(self, p):
-        """ direct_declarator   : LPAREN declarator RPAREN
-        """
-
-    def p_direct_declarator_3(self, p):
-        """ direct_declarator   : direct_declarator LBRACKET LBRACES constant_expression RBRACES QUESTION RBRACKET
-        """
-
-    def p_direct_declarator_4(self, p):
-        """ direct_declarator   : direct_declarator LPAREN parameter_list RPAREN
-        """
-
-    def p_direct_declarator_5(self, p):
-        """ direct_declarator   : direct_declarator LPAREN LBRACES identifier RBRACES TIMES RPAREN
-        """
 
     def p_error (self, p):
         if p:
             print("Error near the symbol %s" % p.value)
         else:
             print("Error at the end of input")
+
+    def p_jump_statement_1(self, p):
+        """ jump_statement  : BREAK SEMI
+        """
+        p[0] = ast_classes.Break(self._token_coord(p, 1))
+
+    def p_jump_statement_2(self, p):
+        """ jump_statement  : RETURN expression_opt SEMI
+        """
+        p[0] = ast_classes.Return(p[2] if len(p) == 4 else None, self._token_coord(p, 1))
+
+    def p_block_item(self, p):
+        """ block_item  : declaration
+                        | statement
+        """
+        p[0] = p[1] if isinstance(p[1], list) else [p[1]]
+
+    def p_block_item_list(self, p):
+        """ block_item_list : block_item
+                            | block_item_list block_item
+        """
+        p[0] = p[1] if len(p) == 2 or p[2] == [None] else p[1] + p[2]
+
+    def p_compound_statement(self, p):
+        """compound_statement   : LBRACES block_item_list RBRACES
+        """
+        p[0] = ast_classes.Compound(block_items=p[2], coord=self._token_coord(p, 1))
+
+    def p_selection_statement_1(self, p):
+        """ selection_statement : IF LPAREN expression RPAREN statement
+        """
+        p[0] = ast_classes.If(p[3], p[5], None, self._token_coord(p, 1))
+
+    def p_selection_statement_2(self, p):
+        """ selection_statement : IF LPAREN expression RPAREN statement ELSE statement
+        """
+        p[0] = ast_classes.If(p[3], p[5], p[7], self._token_coord(p, 1))
+
+    def p_iteration_statement_1(self, p):
+        """ iteration_statement : WHILE LPAREN expression RPAREN statement
+        """
+        p[0] = ast_classes.While(p[3], p[5], self._token_coord(p, 1))
+
+    def p_iteration_statement_2(self, p):
+        """ iteration_statement : FOR LPAREN expression_opt SEMI expression_opt SEMI expression_opt RPAREN statement
+        """
+        p[0] = ast_classes.For(p[3], p[5], p[7], p[9], self._token_coord(p, 1))
+
+    def p_iteration_statement_3(self, p):
+        """ iteration_statement : FOR LPAREN declaration expression_opt SEMI expression_opt RPAREN statement
+        """
+        p[0] = ast_classes.For(ast_classes.DeclList(p[3], self._token_coord(p, 1)),
+                         p[4], p[6], p[8], self._token_coord(p, 1))
+
+    def p_expression_statement(self, p):
+        """ expression_statement : expression_opt SEMI
+        """
+        if p[1] is None:
+            p[0] = ast_classes.EmptyStatement(self._token_coord(p, 2))
+        else:
+            p[0] = p[1]
+
+    def p_assert_statement(self, p):
+        """ assert_statement : ASSERT expression SEMI
+        """
+        p[0] = ast_classes.Assert(p[2])
+
+    def p_print_statement(self, p):
+        """ print_statement : PRINT LPAREN expression_opt RPAREN SEMI
+        """
+        p[0] = ast_classes.Print(p[3])
+
+    def p_read_statement(self, p):
+        """ read_statement : READ LPAREN argument_expression RPAREN SEMI
+        """
+        p[0] = ast_classes.Read(p[3])
+
+    def p_statement(self, p):
+        """ statement   : expression_statement
+                        | selection_statement
+                        | iteration_statement
+                        | jump_statement
+                        | assert_statement
+                        | print_statement
+                        | read_statement
+        """
+        p[0] = p[1]
+
+    def p_expression_opt(self, p):
+        """ expression_opt : expression
+                           | empty
+        """
+        p[0] = p[1]
