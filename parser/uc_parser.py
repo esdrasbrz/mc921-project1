@@ -362,7 +362,7 @@ class UCParser:
         """ expression  : expression COMMA assignment_expression
         """
         if not isinstance(p[1], ast_classes.ExprList):
-            p[1] = ast_classes.ExprList(p[1], p[1].coord)
+            p[1] = ast_classes.ExprList([p[1]], p[1].coord)
         p[1].exprs.append(p[3])
         p[0] = p[1]
 
@@ -378,7 +378,7 @@ class UCParser:
         p[0] = p[2]
 
     def p_cast_expression_1(self, p):
-        """ cast_expression : postfix_expression
+        """ cast_expression : unary_expression
         """
         p[0] = p[1]
 
