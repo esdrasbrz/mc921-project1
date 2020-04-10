@@ -10,27 +10,25 @@ Program:
                 Constant: int, 3   @ 1:18
                 Constant: int, 4   @ 1:21
     FuncDef: 
+        Type: ['int']   @ 2:1
         Decl: ID(name='main'  )
             FuncDecl: 
                 VarDecl: 
                     Type: ['int']   @ 2:1
         Compound:    @ 2:11
-            Decl: ID(name='x'  )
-                VarDecl: 
-                    Type: ['int']   @ 3:5
-            For:    @ 4:5
-                DeclList:    @ 4:5
+            For:    @ 3:5
+                DeclList:    @ 3:5
                     Decl: ID(name='i'  )
                         VarDecl: 
-                            Type: ['int']   @ 4:10
-                        Constant: int, 1   @ 4:18
-                BinaryOp: <=   @ 4:21
-                    ID: i   @ 4:21
-                    Constant: int, 4   @ 4:26
-                UnaryOp: ++   @ 4:29
-                    ID: i   @ 4:29
+                            Type: ['int']   @ 3:10
+                        Constant: int, 1   @ 3:18
+                BinaryOp: <=   @ 3:21
+                    ID: i   @ 3:21
+                    Constant: int, 4   @ 3:26
+                UnaryOp: ++   @ 3:29
+                    ID: i   @ 3:29
                 Print: 
-                    ArrayRef:    @ 5:15
-                        ID: v   @ 5:15
-                        ID: i   @ 5:17
-            Return:    @ 6:5
+                    ArrayRef:    @ 4:15
+                        ID: v   @ 4:15
+                        ID: i   @ 4:17
+            Return:    @ 5:5

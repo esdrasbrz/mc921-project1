@@ -119,7 +119,9 @@ class UCParser:
             decls=[dict(decl=decl, init=None)],
         )[0]
 
+
         return ast_classes.FuncDef(
+            spec,
             declaration,
             param_decls,
             body,

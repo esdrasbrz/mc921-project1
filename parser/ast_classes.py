@@ -246,9 +246,9 @@ class If(Node):
     attr_names = ()
 
 class FuncDef(Node):
-    __slots__ = ('decl', 'param_decls', 'body', 'coord')
-    def __init__(self, decl, param_decls, body, coord=None):
-        print(decl, param_decls, body)
+    __slots__ = ('spec', 'decl', 'param_decls', 'body', 'coord')
+    def __init__(self, spec, decl, param_decls, body, coord=None):
+        self.spec = spec
         self.decl = decl
         self.param_decls = param_decls
         self.body = body
@@ -256,6 +256,7 @@ class FuncDef(Node):
 
     def children(self):
         nodelist = []
+        if self.spec is not None: nodelist.append(("decl", self.spec))
         if self.decl is not None: nodelist.append(("decl", self.decl))
         if self.body is not None: nodelist.append(("body", self.body))
         for i, child in enumerate(self.param_decls or []):
@@ -263,6 +264,8 @@ class FuncDef(Node):
         return tuple(nodelist)
 
     def __iter__(self):
+        if self.spec is not None:
+            yield self.spec
         if self.decl is not None:
             yield self.decl
         if self.body is not None:
