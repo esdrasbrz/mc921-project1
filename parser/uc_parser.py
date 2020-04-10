@@ -346,8 +346,10 @@ class UCParser:
                                 | argument_expression COMMA assignment_expression
         """
         if len(p) == 2:  # single expr
-            p[0] = ast_classes.ExprList([p[1]], p[1].coord)
+            p[0] = p[1]
         else:
+            if (not isinstance(p[1], ast_classes.ExprList)):
+                p[1] = ast_classes.ExprList([p[1]], p[1].coord)
             p[1].exprs.append(p[3])
             p[0] = p[1]
 
