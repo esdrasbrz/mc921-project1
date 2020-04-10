@@ -9,8 +9,8 @@
 
 import sys
 from contextlib import contextmanager
-from parser.uc_parser import UCParser
-from parser.lex.uc_lexer import UCLexer
+from uc_parser import UCParser
+from uc_lexer import UCLexer
 """
 One of the most important (and difficult) parts of writing a compiler
 is reliable reporting of error messages back to the user.  This file

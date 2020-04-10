@@ -1,7 +1,7 @@
 from ply.yacc import yacc
 
-from . import ast_classes
-from .lex.uc_lexer import UCLexer
+import ast_classes
+from uc_lexer import UCLexer
 
 
 def print_error(msg, x, y):
