@@ -1,36 +1,8 @@
 import ply.lex as lex
 import re
 
-class Error(Exception):
-    pass
+from .exceptions import IllegalCharacterError, UnterminatedStringError, UnterminatedCommentError
 
-
-class IllegalCharacterError(Error):
-    """
-    Raised when lexer finds a illegal character
-    """
-    pass
-
-
-class UnterminatedStringError(Error):
-    """
-    Raised when lexer finds a string with " or ' not closed
-    """
-    pass
-
-
-class UnterminatedCommentError(Error):
-    """
-    Raised when lexer finds a comment block not closed
-    """
-    pass
-
-
-class LexerError(Error):
-    """
-    Raised when something went wrong with the lexer, mainly for testing purposes
-    """
-    pass
 
 class UCLexer:
     """ A lexer for the uC language. After building it, set the
@@ -137,20 +109,20 @@ class UCLexer:
     t_NOT = r'!'
 
     # Comparison symbols
-    t_DIFFERENT = r'!\='
-    t_EQUAL = r'\=\='
+    t_DIFFERENT = r'!='
+    t_EQUAL = r'=='
     t_SMALLER = r'<'
-    t_SMALLER_EQUAL = r'<\='
+    t_SMALLER_EQUAL = r'<='
     t_BIGGER = r'>'
-    t_BIGGER_EQUAL = r'<\='
+    t_BIGGER_EQUAL = r'<='
 
     # Assign symbols
     t_ASSIGN = r'\='
-    t_ASSIGN_TIMES = r'\*\='
-    t_ASSIGN_DIVIDE = r'/\='
-    t_ASSIGN_MOD = r'%\='
-    t_ASSIGN_PLUS = r'\+\='
-    t_ASSIGN_MINUS = r'-\='
+    t_ASSIGN_TIMES = r'\*='
+    t_ASSIGN_DIVIDE = r'/='
+    t_ASSIGN_MOD = r'%='
+    t_ASSIGN_PLUS = r'\+='
+    t_ASSIGN_MINUS = r'-='
 
     # Left Right symbols
     t_LPAREN = r'\('
