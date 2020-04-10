@@ -21,12 +21,12 @@ class UCParser:
         self.parser = yacc(module=self)
         pass
 
-    def _token_coord(self, p, token_idx):
+    def _token_coord(self, p, token_idx, set_column=False):
         last_cr = p.lexer.lexer.lexdata.rfind('\n', 0, p.lexpos(token_idx))
         if last_cr < 0:
             last_cr = -1
         column = (p.lexpos(token_idx) - (last_cr))
-        return ast_classes.Coord(p.lineno(token_idx), column)
+        return ast_classes.Coord(p.lineno(token_idx), 1 if set_column else column)
 
     def _type_modify_decl(self, decl, modifier):
         """ Tacks a type modifier on a declarator, and returns
@@ -168,7 +168,7 @@ class UCParser:
     def p_global_declaration_1(self, p):
         """ global_declaration  : declaration
         """
-        p[0] = ast_classes.GlobalDef(p[1])
+        p[0] = ast_classes.GlobalDecl(p[1])
 
     def p_global_declaration_2(self, p):
         """ global_declaration  : function_definition
@@ -327,14 +327,14 @@ class UCParser:
         """ postfix_expression : postfix_expression PLUS_PLUS
                                | postfix_expression MINUS_MINUS
         """
-        p[0] = ast_classes.UnaryOp(p[2], p[1], p[1].coord)
+        p[0] = ast_classes.UnaryOp('p' + p[2], p[1], p[1].coord)
 
     def p_postfix_expression_3(self, p):
         """ postfix_expression  : postfix_expression LPAREN RPAREN
                                 | postfix_expression LPAREN argument_expression RPAREN
         """
         p[0] = ast_classes.FuncCall(
-            p[1], p[3] if len(p) == 5 else None, p[1].coord)
+            p[1], p[3] if len(p) > 4 else None, p[1].coord)
 
     def p_postfix_expression_4(self, p):
         """ postfix_expression  : postfix_expression LBRACKET expression RBRACKET
@@ -506,17 +506,6 @@ class UCParser:
         coord = self._token_coord(p, 1)
         p[0] = ast_classes.Constant('string', p[1], coord)
 
-    def p_empty(self, p):
-        """ empty :
-        """
-        pass
-
-    def p_error(self, p):
-        if p:
-            print("Error near the symbol %s" % p.value)
-        else:
-            print("Error at the end of input")
-
     def p_jump_statement_1(self, p):
         """ jump_statement  : BREAK SEMI
         """
@@ -542,12 +531,13 @@ class UCParser:
     def p_compound_statement(self, p):
         """ compound_statement   : LBRACES block_item_list RBRACES
         """
-        p[0] = ast_classes.Compound(block_items=p[2], coord=self._token_coord(p, 1))
+        p[0] = ast_classes.Compound(block_items=p[2], coord=self._token_coord(p, 1, set_column=True))
 
     def p_selection_statement_1(self, p):
         """ selection_statement : IF LPAREN expression RPAREN statement
         """
         p[0] = ast_classes.If(p[3], p[5], None, self._token_coord(p, 1))
+        # This is only needed because of professor's mistake dealing with cols
 
     def p_selection_statement_2(self, p):
         """ selection_statement : IF LPAREN expression RPAREN statement ELSE statement
@@ -581,17 +571,17 @@ class UCParser:
     def p_assert_statement(self, p):
         """ assert_statement : ASSERT expression SEMI
         """
-        p[0] = ast_classes.Assert(p[2])
+        p[0] = ast_classes.Assert(p[2], self._token_coord(p, 1))
 
     def p_print_statement(self, p):
         """ print_statement : PRINT LPAREN expression_opt RPAREN SEMI
         """
-        p[0] = ast_classes.Print(p[3])
+        p[0] = ast_classes.Print(p[3], self._token_coord(p, 1))
 
     def p_read_statement(self, p):
         """ read_statement : READ LPAREN argument_expression RPAREN SEMI
         """
-        p[0] = ast_classes.Read(p[3])
+        p[0] = ast_classes.Read(p[3], self._token_coord(p, 1))
 
     def p_statement(self, p):
         """ statement   : expression_statement
@@ -627,3 +617,14 @@ class UCParser:
             function=[])
 
         p[0] = self._build_function_definition(spec, p[1], p[2], p[3])
+
+    def p_empty(self, p):
+        """ empty :
+        """
+        pass
+
+    def p_error(self, p):
+        if p:
+            print("Error near the symbol %s" % p.value)
+        else:
+            print("Error at the end of input")

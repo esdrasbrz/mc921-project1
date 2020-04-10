@@ -570,7 +570,7 @@ class ArrayRef(Node):
 
     attr_names = ()
 
-class GlobalDef(Node):
+class GlobalDecl(Node):
     __slots__ = ('decls', 'coord')
     def __init__(self, decls, coord=None):
         self.decls = decls
